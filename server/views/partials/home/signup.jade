@@ -1,0 +1,32 @@
+﻿.container
+	.well
+		h1.fa.fa-sign-in Sign Up
+		form.form-horizontal(name="signupForm")
+			fieldset
+				legend
+				.form-group
+					.col-md-6
+						input.form-control(name="firstName", type="text", placeholder="First Name", ng-model="firstName", autofocus)
+				.form-group
+					.col-md-6
+						input.form-control(name="lastName", type="text", placeholder="Last Name", ng-model="lastName")
+				.form-group
+					.col-md-6
+						input.form-control(name="userName", type="text", placeholder="User Name", ng-model="userName", required, ng-minlength="3" ng-maxlength="10")
+				.form-group
+					.col-md-6
+						input.form-control(name="email", type="email", placeholder="Email", ng-model="email", required)
+				.form-group
+					.col-md-6
+						input.form-control(name="password", type="password", placeholder="Password", ng-model="password", required, ng-minlength="6")
+				.form-group
+					.col-md-6.col
+						.pull-right
+							button.btn.btn-warning(ng-click="signup()", ng-disabled="signupForm.$invalid") Submit
+							| 
+							a.btn.btn-default(href="/") Cancel
+
+		hr
+			
+		p Already have an account? 
+			a(href="/login") Login

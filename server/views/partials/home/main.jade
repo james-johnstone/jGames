@@ -1,0 +1,21 @@
+.container
+	.jumbotron.text-center
+		h2
+		p hacking ground for nodejs and some games
+
+	.jumbotron.text-center.auth-area(ng-hide="identity.isAuthenticated()")
+		h2
+			.fa.fa-lock
+
+			p Login or Register
+
+			a.btn.btn-default(href="/login")
+				.fa.fa-user &nbsp; Local Login
+			a.btn.btn-default(href="/signup")
+				.fa.fa-user &nbsp; Local Signup
+			a.btn.btn-primary(href="/auth/facebook", target="_self")
+				.fa.fa-facebook &nbsp; Facebook
+			a.btn.btn-info(href="/auth/twitter", target="_self")
+				.fa.fa-twitter &nbsp; Twitter
+			a.btn.btn-danger(href="/auth/google", target="_self")
+				.fa.fa-google-plus &nbsp; Google

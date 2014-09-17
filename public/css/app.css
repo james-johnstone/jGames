@@ -1,0 +1,183 @@
+html,
+body {
+  height: 100%;
+}
+footer {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.navbar-form {
+  max-width: 604px;
+}
+.navbar-form .form-group {
+  margin-left: 4px;
+  max-width: 203px;
+}
+.navbar-form button {
+  margin-left: 10px;
+}
+.toastr-top-right {
+  top: 70px;
+}
+.auth-area a {
+  margin: 4px;
+}
+.toast-success {
+  background-colSor: #13987e;
+}
+.top-padding {
+  padding-top: 10px;
+}
+.margin-left {
+  margin-left: 10px;
+}
+input,
+select {
+  max-width: 320px;
+}
+.inline {
+  display: inline-block;
+}
+.main-content {
+  padding-bottom: 50px;
+}
+.game-active-word-container,
+.game-root-language-container {
+  display: table;
+  margin: 0 auto;
+  min-height: 74px;
+  overflow: hidden;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.game-active-word-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 24%;
+}
+.game-root-language-container {
+  width: 70%;
+  font-size: xx-large;
+}
+.game-active-word,
+.game-root-language {
+  font-size: xx-large;
+  display: table-cell;
+  vertical-align: middle;
+  -webkit-user-select: none;
+/* Chrome/Safari */
+  -moz-user-select: none;
+/* Firefox */
+  -ms-user-select: none;
+/* IE10+ */
+/* Rules below not implemented in browsers yet */
+  -o-user-select: none;
+  user-select: none;
+}
+.game-active-word {
+  cursor: default;
+}
+.border {
+  padding: 0;
+  border: 1px solid rgba(0,0,0,0.5);
+  border-radius: 10px 10px 10px 10px;
+  background: rgba(0,0,0,0);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
+  -o-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
+}
+.root-card {
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-transition: 0.8s;
+  -moz-transition: 0.8s;
+  transition: 0.8s;
+}
+.root-card .card {
+  position: absolute;
+  width: 100%;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.front {
+  z-index: 1;
+}
+.back {
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+.back button {
+  cursor: default;
+}
+.rotate-3d {
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+  -webkit-transform-origin-x: 50%;
+  transform-origin: 50% 40%;
+  -ms-transform-origin: 50% 40%;
+/* IE 9 */
+}
+.wrong-card {
+  content: "X";
+  font-weight: 700;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.answer-container {
+  min-height: 140px;
+  position: relative;
+}
+.btn-danger {
+  color: #fff;
+  background-color: #cd0200;
+  border-color: #cd0200;
+}
+.btn-success {
+  background-image: -webkit-linear-gradient(#61dd45, #3cb521 50%, #36a41e);
+  background-image: linear-gradient(#61dd45, #3cb521 50%, #36a41e);
+  background-repeat: no-repeat;
+  border: 1px solid #2e8a19;
+}
+/*
+.root-cards-animation.ng-hide-add 
+  opacity: 1.0;
+  display: block !important;
+  transition: opacity 1s;
+
+
+.root-cards-animation.ng-hide-add-active 
+  opacity: 0;
+  */
+.root-cards-animation.ng-hide-remove {
+  -moz-animation: fadeInDown 1s;
+  -o-animation: fadeInDown 1s;
+  -webkit-animation: fadeInDown 1s;
+  animation: fadeInDown 1s;
+}
+.root-cards-animation.ng-hide-add {
+  -moz-animation: fadeOutDown 1s;
+  -o-animation: fadeOutDown 1s;
+  -webkit-animation: fadeOutDown 1s;
+  animation: fadeOutDown 1s;
+  display: block !important;
+}
+.root-etymology-animation.ng-hide-remove {
+  -moz-animation: fadeInDown 2s;
+  -o-animation: fadeInDown 2s;
+  -webkit-animation: fadeInDown 2s;
+  animation: fadeInDown 2s;
+}
+.etymology-container {
+  padding-top: 20px;
+  position: absolute;
+  width: 100%;
+}
+.root-container {
+  min-height: 134px;
+}

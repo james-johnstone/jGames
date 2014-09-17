@@ -1,0 +1,124 @@
+﻿.container
+	.row
+		.col-sm-6
+			.well
+				h3.fa.fa-user  Local Profile
+				form.form-horizontal(name="profileForm")
+					fieldset(ng-show="!!user.local.salt")
+						legend
+						.form-group
+							label.col-md-2.control-label First Name
+							.col-md-6
+								input.form-control(name="firstName", type="text", placeholder="First Name", ng-model="user.local.firstName")
+						.form-group
+							label.col-md-2.control-label Last Name
+							.col-md-6
+								input.form-control(name="lastName", type="text", placeholder="Last Name", ng-model="user.local.lastName")
+						.form-group
+							label.col-md-2.control-label User Name
+							.col-md-6
+								input.form-control(name="userName", type="text", placeholder="User Name", ng-model="user.local.userName", required,ng-minlength="3" ng-maxlength="10")
+						.form-group
+							label.col-md-2.control-label Email
+							.col-md-6
+								input.form-control(name="email", type="email", placeholder="Email", ng-model="user.local.email", required)
+						.form-group
+							.col-md-6.col
+								.pull-right
+									button.btn.btn-primary(ng-click="update()", ng-disabled="profileForm.$invalid") Update
+									| 
+									a.btn.btn-default(href="/") Cancel
+				fieldset(ng-show="!user.local.salt")
+						legend
+						.form-group
+							.col-md-6.col
+								.pull-right
+									a.btn.btn-default(href="/connect/local") Connect Local
+
+		.col-sm-6
+			.well
+				h3.text-primary.fa.fa-facebook   Facebook
+				form.form-horizontal(name="facebookProfileForm")
+					fieldset(ng-show="!!user.facebook")
+						legend
+						.form-group
+							label.col-md-2.control-label id
+							.col-md-6
+								p.form-control-static {{user.facebook.id}}
+						.form-group
+							label.col-md-2.control-label Email
+							.col-md-6
+								p.form-control-static {{user.facebook.email}}
+						.form-group
+							label.col-md-2.control-label Name
+							.col-md-6
+								p.form-control-static {{user.facebook.name}}
+						.form-group
+							.col-md-6.col
+								.pull-right
+									button.btn.btn-default(ng-click="unlinkFacebook()") Unlink
+				fieldset(ng-show="!user.facebook")
+						legend
+						.form-group
+							.col-md-6.col
+								.pull-right
+									a.btn.btn-warning(href="/connect/facebook", target="_self") Connect Facebook
+	
+	.row
+		.col-sm-6
+			.well
+				h3.text-danger.fa.fa-google-plus   Google
+				form.form-horizontal(name="googleProfileForm")
+					fieldset(ng-show="!!user.google")
+						legend
+						.form-group
+							label.col-md-2.control-label id
+							.col-md-6
+								p.form-control-static {{user.google.id}}
+						.form-group
+							label.col-md-2.control-label Email
+							.col-md-6
+								p.form-control-static {{user.google.email}}
+						.form-group
+							label.col-md-2.control-label Name
+							.col-md-6
+								p.form-control-static {{user.google.name}}
+						.form-group
+							.col-md-6.col
+								.pull-right
+									button.btn.btn-default(ng-click="unlinkGoogle()") Unlink
+					fieldset(ng-show="!user.google")
+						legend
+						.form-group
+							.col-md-6.col
+								.pull-right
+									a.btn.btn-danger(href="/connect/google", target="_self") Connect Google
+
+		.col-sm-6
+			.well
+				h3.text-info.fa.fa-twitter   Twitter
+				form.form-horizontal(name="twitterProfileForm")
+					fieldset(ng-show="!!user.twitter")
+						legend
+						.form-group
+							label.col-md-2.control-label id
+							.col-md-6
+								p.form-control-static {{user.twitter.id}}
+						.form-group
+							label.col-md-2.control-label User Name
+							.col-md-6
+								p.form-control-static {{user.twitter.userName}}
+						.form-group
+							label.col-md-2.control-label Display Name
+							.col-md-6
+								p.form-control-static {{user.twitter.displayName}}
+						.form-group
+							.col-md-6.col
+								.pull-right
+									button.btn.btn-default(ng-click="unlinkTwitter()") Unlink
+					fieldset(ng-show="!user.twitter")
+						legend
+						.form-group
+							.col-md-6.col
+								.pull-right
+									a.btn.btn-info(href="/connect/twitter", target="_self") Connect Twitter

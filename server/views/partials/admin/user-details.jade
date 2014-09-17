@@ -1,0 +1,94 @@
+﻿.container
+	.col-sm-8
+		.well
+			form.form-horizontal(name="userDetailsForm")
+				h3.fa.fa-user   Local Profile
+				fieldset
+					legend
+					.form-group
+						label.col-md-2.control-label First Name
+						.col-md-6
+							input.form-control(name="firstName", type="text", placeholder="First Name", ng-model="user.local.firstName")
+					.form-group
+						label.col-md-2.control-label Last Name
+						.col-md-6
+							input.form-control(name="lastName", type="text", placeholder="Last Name", ng-model="user.local.lastName")
+					.form-group
+						label.col-md-2.control-label User Name
+						.col-md-6
+							input.form-control(name="userName", type="text", placeholder="User Name", ng-model="user.local.userName", required)
+					.form-group
+						label.col-md-2.control-label Email
+						.col-md-6
+							input.form-control(name="email", type="email", placeholder="Email", ng-model="user.local.email", required)
+					.form-group
+						label.col-md-2.control-label Roles
+						.col-md-8
+							div(ng-repeat="role in user.local.roles track by $index")							
+								select.form-control.inline(ng-model="user.local.roles[$index]", ng-options="item.value as item.text for item in roleOptions")
+								button.btn.btn-danger(ng-click="removeRole($index)") X
+					.col-md-2 
+						button.btn.btn-success.pull-right(ng-click="addRole()") Add Role
+				
+					.form-group
+						.col-md-6.col
+							.pull-right
+								button.btn.btn-primary(ng-click="update()", ng-disabled="userDetailsForm.$invalid") Submit
+								| 
+								a.btn.btn-default(href="/admin/users") Cancel
+	.col-sm-4
+		.row(ng-show="!!user.facebook")
+			.well
+				h3.text-primary.fa.fa-facebook   Facebook
+				form.form-horizontal(name="facebookProfileForm")
+					fieldset
+						legend
+						.form-group
+							label.col-md-2.control-label id
+							.col-md-6
+								p.form-control-static {{user.facebook.id}}
+						.form-group
+							label.col-md-2.control-label Email
+							.col-md-6
+								p.form-control-static {{user.facebook.email}}
+						.form-group
+							label.col-md-2.control-label Name
+							.col-md-6
+								p.form-control-static {{user.facebook.name}}
+		.row(ng-show="!!user.google")
+			.well
+				h3.text-danger.fa.fa-google-plus   Google
+				form.form-horizontal(name="googleProfileForm")
+					fieldset
+						legend
+						.form-group
+							label.col-md-2.control-label id
+							.col-md-6
+								p.form-control-static {{user.google.id}}
+						.form-group
+							label.col-md-2.control-label Email
+							.col-md-6
+								p.form-control-static {{user.google.email}}
+						.form-group
+							label.col-md-2.control-label Name
+							.col-md-6
+								p.form-control-static {{user.google.name}}
+
+		.row(ng-show="!!user.twitter")
+			.well
+				h3.text-info.fa.fa-twitter   Twitter
+				form.form-horizontal(name="twitterProfileForm")
+					fieldset
+						legend
+						.form-group
+							label.col-md-2.control-label id
+							.col-md-6
+								p.form-control-static {{user.twitter.id}}
+						.form-group
+							label.col-md-2.control-label User Name
+							.col-md-6
+								p.form-control-static {{user.twitter.userName}}
+						.form-group
+							label.col-md-2.control-label Display Name
+							.col-md-6
+								p.form-control-static {{user.twitter.displayName}}

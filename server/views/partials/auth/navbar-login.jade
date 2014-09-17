@@ -1,0 +1,9 @@
+﻿ul.nav.navbar-nav.navbar-right(ng-show="identity.isAuthenticated()")
+    li.dropdown
+        a.dropdown-toggle(data-toggle="dropdown" href="#") {{identity.getUsername()}}
+            b.caret
+        ul.dropdown-menu
+            li
+                a(href="/profile") Profile
+            li
+                a(href="", ng-click="signout()") Sign Out
