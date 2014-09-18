@@ -2,25 +2,8 @@ html,
 body {
   height: 100%;
 }
-footer {
-  padding-left: 15px;
-  padding-right: 15px;
-}
-.navbar-form {
-  max-width: 604px;
-}
-.navbar-form .form-group {
-  margin-left: 4px;
-  max-width: 203px;
-}
-.navbar-form button {
-  margin-left: 10px;
-}
 .toastr-top-right {
   top: 70px;
-}
-.auth-area a {
-  margin: 4px;
 }
 .toast-success {
   background-colSor: #13987e;
@@ -38,146 +21,87 @@ select {
 .inline {
   display: inline-block;
 }
-.main-content {
-  padding-bottom: 50px;
+body {
+  background: #222;
 }
-.game-active-word-container,
-.game-root-language-container {
-  display: table;
-  margin: 0 auto;
-  min-height: 74px;
-  overflow: hidden;
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-.game-active-word-container {
-  margin-left: auto;
-  margin-right: auto;
-  width: 24%;
-}
-.game-root-language-container {
-  width: 70%;
-  font-size: xx-large;
-}
-.game-active-word,
-.game-root-language {
-  font-size: xx-large;
-  display: table-cell;
-  vertical-align: middle;
-  -webkit-user-select: none;
-/* Chrome/Safari */
-  -moz-user-select: none;
-/* Firefox */
-  -ms-user-select: none;
-/* IE10+ */
-/* Rules below not implemented in browsers yet */
-  -o-user-select: none;
-  user-select: none;
-}
-.game-active-word {
-  cursor: default;
-}
-.border {
-  padding: 0;
-  border: 1px solid rgba(0,0,0,0.5);
-  border-radius: 10px 10px 10px 10px;
-  background: rgba(0,0,0,0);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
-  -o-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
-  -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
-  -moz-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);
-}
-.root-card {
-  -webkit-transform-style: preserve-3d;
-  -moz-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-  -webkit-transition: 0.8s;
-  -moz-transition: 0.8s;
-  transition: 0.8s;
-}
-.root-card .card {
+.absolute-center {
+  margin: auto;
   position: absolute;
-  width: 100%;
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  backface-visibility: hidden;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
-.front {
-  z-index: 1;
+.tictactoe {
+  height: 480px;
+  width: 80%;
+  background: #3e3e3e;
+  text-align: center;
 }
-.back {
-  -webkit-transform: rotateY(180deg);
-  -moz-transform: rotateY(180deg);
-  transform: rotateY(180deg);
+.tictactoe .game {
+  display: inline-block;
+  padding-top: 34px;
 }
-.back button {
-  cursor: default;
+.tictactoe .game .fa {
+  line-height: inherit;
+  font-size: 80px;
 }
-.rotate-3d {
-  -webkit-transform: rotateY(180deg);
-  -moz-transform: rotateY(180deg);
-  transform: rotateY(180deg);
-  -webkit-transform-origin-x: 50%;
-  transform-origin: 50% 40%;
-  -ms-transform-origin: 50% 40%;
-/* IE 9 */
+.tictactoe .game div {
+  width: 120px;
+  height: 120px;
+  border: 1px solid;
 }
-.wrong-card {
-  content: "X";
-  font-weight: 700;
-  color: #bbb;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.tictactoe .game-row {
+  float: left;
 }
-.answer-container {
-  min-height: 140px;
-  position: relative;
+.tictactoe .play-again {
+  margin-top: 248px;
 }
-.btn-danger {
-  color: #fff;
-  background-color: #cd0200;
-  border-color: #cd0200;
+.welcome h2 {
+  padding-top: 20px;
+  font-family: monospace;
+  color: #208a00;
+  text-transform: capitalize;
 }
-.btn-success {
-  background-image: -webkit-linear-gradient(#61dd45, #3cb521 50%, #36a41e);
-  background-image: linear-gradient(#61dd45, #3cb521 50%, #36a41e);
-  background-repeat: no-repeat;
-  border: 1px solid #2e8a19;
+.options .btn {
+  margin: 4px;
 }
-/*
-.root-cards-animation.ng-hide-add 
-  opacity: 1.0;
+.options.ng-hide-remove {
+  -moz-animation: fadeIn 2s;
+  -o-animation: fadeIn 2s;
+  -webkit-animation: fadeIn 2s;
+  animation: fadeIn 2s;
+}
+.options.ng-hide-add {
+  -moz-animation: fadeOut 2s;
+  -o-animation: fadeOut 2s;
+  -webkit-animation: fadeOut 2s;
+  animation: fadeOut 2s;
   display: block !important;
-  transition: opacity 1s;
-
-
-.root-cards-animation.ng-hide-add-active 
-  opacity: 0;
-  */
-.root-cards-animation.ng-hide-remove {
-  -moz-animation: fadeInDown 1s;
-  -o-animation: fadeInDown 1s;
-  -webkit-animation: fadeInDown 1s;
-  animation: fadeInDown 1s;
 }
-.root-cards-animation.ng-hide-add {
+.welcome.ng-hide-remove {
+  -moz-animation: fadeIn 2s;
+  -o-animation: fadeIn 2s;
+  -webkit-animation: fadeIn 2s;
+  animation: fadeIn 2s;
+}
+.welcome.ng-hide-add {
   -moz-animation: fadeOutDown 1s;
   -o-animation: fadeOutDown 1s;
   -webkit-animation: fadeOutDown 1s;
   animation: fadeOutDown 1s;
   display: block !important;
 }
-.root-etymology-animation.ng-hide-remove {
-  -moz-animation: fadeInDown 2s;
-  -o-animation: fadeInDown 2s;
-  -webkit-animation: fadeInDown 2s;
-  animation: fadeInDown 2s;
+.game.ng-hide-remove {
+  -moz-animation: fadeIn 4s;
+  -o-animation: fadeIn 4s;
+  -webkit-animation: fadeIn 4s;
+  animation: fadeIn 4s;
 }
-.etymology-container {
-  padding-top: 20px;
-  position: absolute;
-  width: 100%;
-}
-.root-container {
-  min-height: 134px;
+.game.ng-hide-add {
+  -moz-animation: fadeOutDown 1s;
+  -o-animation: fadeOutDown 1s;
+  -webkit-animation: fadeOutDown 1s;
+  animation: fadeOutDown 1s;
+  display: inline-block !important;
 }

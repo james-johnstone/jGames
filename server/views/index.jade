@@ -1,31 +1,18 @@
 extend ../includes/layout
 
 block main-content
-    .navbar.navbar-fixed.top.navbar-inverse(role='navigation')
-        .narvar-inner
-            .container(ng-controller="authController")
-                // Brand and toggle get grouped for better mobile display
-                .navbar-header
-                    button.navbar-toggle(type='button', data-toggle='collapse', data-target='#navbar-collapse')
-                        span.sr-only Toggle navigation
-                        span.icon-bar
-                        span.icon-bar
-                        span.icon-bar
-                    a.navbar-brand(href='/') Home
-                // Collect the nav links, forms, and other content for toggling
-                #navbar-collapse.collapse.navbar-collapse
-                    ul.nav.navbar-nav
-                        li.dropdown(ng-show="identity.currentUser.isAdmin()")
-                            a.dropdown-toggle(href='#', data-toggle='dropdown')
-                                | Admin
-                                b.caret
-                            ul.dropdown-menu
-                                li
-                                    a(href="/admin/users") Users
-                     div(ng-include="'/partials/auth/navbar-login'")
+    .container
+      .well.absolute-center.tictactoe.center(ng-controller="tictactoeController")
+        .welcome.animated(ng-show="!isPlaying")
+          h2 {{welcome}}
 
-    section.content.main-content
-        div(ng-view)
+          .options.animated(ng-show="isGreeted")
+            .btn.btn-default(ng-click="play()") Yes
 
-    footer.text-center.navbar.navbar-fixed-bottom.footer
-        p &copy; 2014 J
+        .game.animated(ng-show="gameStarted")
+          .game-row(data-ng-repeat="row in gameObject track by $index")
+            .column(ng-repeat="col in row track by $index",
+                ng-class="{'empty' : !col ,  'fa fa-times' : col == 1 ,  'fa fa-check' : col == 2 }",
+                ng-click="gameClick(row, $index)")
+        .play-again(ng-show="gameOver && gameStarted")
+          button.btn.btn-feault(ng-click="playAgain()") Play Again?
