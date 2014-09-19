@@ -40,7 +40,8 @@ body {
 }
 .tictactoe .game {
   display: inline-block;
-  padding-top: 34px;
+  height: 360px;
+  margin-top: 34px;
 }
 .tictactoe .game .fa {
   line-height: inherit;
@@ -53,9 +54,6 @@ body {
 }
 .tictactoe .game-row {
   float: left;
-}
-.tictactoe .play-again {
-  margin-top: 248px;
 }
 .welcome h2 {
   padding-top: 20px;
