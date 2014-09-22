@@ -19,6 +19,8 @@ angular.module('app').config(function ($routeProvider, $locationProvider) {
     $routeProvider
         .when('/', { templateUrl: '/partials/home/main', controller: 'mainController'})
         .when('/play', {templateUrl: 'partials/game/play', controller: 'gameController'})
+        .when('/play/tictactoe', {templateUrl: '/partials/game/tictactoe', controller: 'tictactoeController'})
+        .when('/play/pong', {templateUrl: '/partials/game/pong', controller: 'pongController'})
         .when('/profile', {
             templateUrl: '/partials/user/user-profile',
             controller: 'userProfileController',
@@ -46,36 +48,6 @@ angular.module('app').config(function ($routeProvider, $locationProvider) {
             controller: 'adminUserDetailsController',
             resolve: routeRoleChecks.admin
         })
-        .when('/admin/words', {
-            templateUrl: '/partials/admin/words-list',
-            controller: 'adminWordsController',
-            resolve: routeRoleChecks.admin
-        })
-        .when('/admin/words/new', {
-            templateUrl: '/partials/admin/word-details',
-            controller: 'wordDetailsController',
-            resolve: routeRoleChecks.admin
-        })
-        .when('/admin/words/:id', {
-            templateUrl: '/partials/admin/word-details',
-            controller: 'wordDetailsController',
-            resolve: routeRoleChecks.admin
-        })
-        .when('/admin/languages', {
-            templateUrl: '/partials/admin/languages-list',
-            controller: 'languagesController',
-            resolve: routeRoleChecks.admin
-        })
-        .when('/admin/languages/new', {
-            templateUrl: '/partials/admin/languags-details',
-            controller: 'languageDetailsController',
-            resolve: routeRoleChecks.admin
-        })
-        .when('/admin/languages/:id', {
-            templateUrl: '/partials/admin/languags-details',
-            controller: 'languageDetailsController',
-            resolve: routeRoleChecks.admin
-        });
 });
 
 

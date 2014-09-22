@@ -1,3 +1,19 @@
 .container
-  .jumbotron.text-center
-  
+  .well.absolute-center.tictactoe.center
+    .welcome.animated(ng-show="!isPlaying")
+      h2 {{welcome}}
+
+      .options.animated(ng-show="isGreeted")
+        .btn.btn-default(ng-click="play()") Yes
+
+    .game.animated(ng-show="gameStarted")
+      .game-row(data-ng-repeat="row in gameObject track by $index")
+        .column(ng-repeat="col in row track by $index",
+            ng-class="{'empty' : !col ,  'fa fa-times' : col == 1 ,  'fa fa-check' : col == 2 }",
+            ng-click="gameClick(row, $index)")
+    .please-wait(ng-show="gameStarted && isThinking")
+      i.fa.fa-spinner.fa-spin
+    .play-again(ng-show="gameStarted && move === 0")
+      button.btn.btn-feault.fa.fa-laptop(ng-click="aiClick()")
+    .play-again(ng-show="gameOver && gameStarted")
+      button.btn.btn-feault(ng-click="playAgain()") Play Again?

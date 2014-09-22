@@ -1,7 +1,11 @@
 .container
-	.jumbotron.text-center
+	.jumbotron.text-center.gameOptions
 		h2
 		p hacking ground for nodejs and some games
+
+		a.btn.btn-default(href="/play/tictactoe")
+			Tic Tac Toe
+		a.btn.btn-default(href="/play/pong") Pong
 
 	.jumbotron.text-center.auth-area(ng-hide="identity.isAuthenticated()")
 		h2

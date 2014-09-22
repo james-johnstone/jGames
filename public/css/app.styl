@@ -1,6 +1,25 @@
 html,body
     height: 100%
 
+footer
+	padding-left 15px
+	padding-right 15px
+
+
+.navbar-form
+    max-width 604px
+    .form-group
+        margin-left 4px
+        max-width 203px
+    button
+        margin-left 10px
+
+.auth-area a
+	margin 4px
+
+.gameOptions a
+  margin 4px
+
 .toastr-top-right
 	top 70px
 
@@ -19,19 +38,36 @@ input, select
 .inline
 	display: inline-block
 
-body
-  background:#222;
-
 .absolute-center
   margin: auto;
   position: absolute;
   top: 0; left: 0; bottom: 0; right: 0;
 
+.pong
+  text-align:center;
+  button
+    margin: 8px;
+  .score
+    width: 146px;
+    height: 32px;
+    border: 1px solid white;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: monospace;
+    padding-left: 4px;
+  .aiScore
+    float:left;
+    width:84px;
+  .playerScore
+    float:right;
+    margin-right: 10px;
 
 .tictactoe
   height: 480px;
   width:80%;
-  background:#3E3E3E;
+  background:#101010;
   text-align:center;
   .game
     display: inline-block;
@@ -47,6 +83,10 @@ body
     border: 1px solid
   .game-row
     float:left;
+  .please-wait
+    font-size: 64px !important;
+    margin-top: -230px;
+
 
 .welcome h2
   padding-top:20px;
@@ -96,3 +136,7 @@ body
     -webkit-animation: fadeOutDown 1s;
     animation: fadeOutDown 1s;
     display: inline-block !important;
+
+.pong
+  height:80%
+  width:80%

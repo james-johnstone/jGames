@@ -8,6 +8,7 @@
     $scope.welcomeText = 'Would you like to play a game?'
     $scope.activeTurn;
     $scope.move = 0;
+    $scope.isThinking = false;
 
     Array.maxObject = function (array, prop) {
         var values = array.filter(function (el) {
@@ -89,11 +90,17 @@
 
     $scope.aiClick = function () {
         if ($scope.gameOver) return;
+        $scope.activeTurn = 2;
+        $scope.isThinking = true;
 
         var move = $scope.getMinMax($scope.gameObject, 0).move;
+        $scope.isThinking = false;
+
         $scope.applyMove($scope.gameObject, move, 2)
         $scope.move++;
         $scope.checkForWin($scope.gameObject);
+
+        $scope.activeTurn = 1;
     }
 
     $scope.playAgain = function () {

@@ -47,20 +47,20 @@ exports.requiresRole = function (role) {
 
 exports.config = {
     'facebookAuth': {
-        'clientID': '674095555959783',
-        'clientSecret': '3306c54cbf918e5b715b9d3c31e87010',
-        'callbackURL': 'http://desolate-coast-5998.herokuapp.com/auth/facebook/callback'
+        'clientID': '737076736328331',
+        'clientSecret': '444d9050d4027681182a656e1501b403',
+        'callbackURL': 'http://localhost:3000/auth/facebook/callback'
     },
 
     'twitterAuth': {
-        'consumerKey': '5uJ8VhXzLmKmkdkhfmJZvWDW4',
-        'consumerSecret': 'qGKgjcrsiYQsK0LY35wy7LmPr36wb1vLo1kH6RWzZbYYOyaED4',
-        'callbackURL': 'http://desolate-coast-5998.herokuapp.com/auth/twitter/callback'
+        'consumerKey': 'GsS4f70F0BOgQqQ4BY7SBqLL8',
+        'consumerSecret': 'TNyUdHG2fAZudSjW8A3lMeTJHsqPLAG7DK8nomMgMH0Ns7lvBd',
+        'callbackURL': 'http://localhost:3000/auth/twitter/callback'
     },
 
     'googleAuth': {
-        'clientID': '718084310608-qhrf5gb57jcj0kucnk6777cc5sn5lnte.apps.googleusercontent.com',
-        'clientSecret': 'hJL6KUcRhnUuMxfwrfqYa1fK',
-        'callbackURL': 'http://desolate-coast-5998.herokuapp.com/auth/google/callback'
+        'clientID': '346724692474-6aq60ko3u09ree7pbid30or1bntmg57u.apps.googleusercontent.com',
+        'clientSecret': 'Pz2z4Ido1UEmEb4FMngZw75y',
+        'callbackURL': 'http://localhost:3000/auth/google/callback'
     }
 };
