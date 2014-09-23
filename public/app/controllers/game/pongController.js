@@ -33,6 +33,7 @@
         paddles.push(playerPaddle);
         paddles.push(aiPaddle);
         VELOCITY = 6;
+        DELTA = 8;
         playCount = 0;
     }
 

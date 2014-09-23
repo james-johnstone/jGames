@@ -1,15 +1,20 @@
-﻿angular.module('app').value('toastrNotifier', toastr);
+﻿//angular.module('app').value('toastrNotifier', toastr);
 
-angular.module('app').factory('appNotifier', function (toastrNotifier) {
+angular.module('app').factory('appNotifier', function () {
     return {
         notify: function (message, success) {
-            if (success) {
-                toastrNotifier.success(message);
-            }
-            else
-            {
-                toastrNotifier.error(message);
-            }
+            Messenger().post({
+              message : message,
+              type: success ? "success" : "error",
+              showCloseButton : true
+            });
+            // if (success) {
+            //     toastrNotifier.success(message);
+            // }
+            // else
+            // {
+            //     toastrNotifier.error(message);
+            // }
         }
     };
 });

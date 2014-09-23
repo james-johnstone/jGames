@@ -80,6 +80,15 @@ select {
   background: #101010;
   text-align: center;
 }
+.tictactoe .peer-details {
+  width: 240px;
+  position: absolute;
+  top: 50px;
+  right: 140px;
+}
+.tictactoe button {
+  margin: 8px;
+}
 .tictactoe .game {
   display: inline-block;
   height: 360px;

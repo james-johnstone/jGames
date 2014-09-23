@@ -11,9 +11,29 @@
         .column(ng-repeat="col in row track by $index",
             ng-class="{'empty' : !col ,  'fa fa-times' : col == 1 ,  'fa fa-check' : col == 2 }",
             ng-click="gameClick(row, $index)")
+    .peer-details(ng-show="is2Player")
+      .panel.panel-primary
+        .panel-heading
+          .panel-title Connection Details
+        .panel-body Your ID: {{peerID}}
+      .panel.panel-warning(ng-show="!connection")
+        .panel-heading
+          .panel-title Connect to Peer
+        .panel-body
+          form
+            input(ng-model="opponentID")
+            button.btn.btn-primary(ng-click="connectToPeer()")
+
+      .panel.panel-warning(ng-show="!!connection")
+        .panel-heading
+          .panel-title Connected
+        .panel-body Opponent: {{opponentID}}
+
     .please-wait(ng-show="gameStarted && isThinking")
       i.fa.fa-spinner.fa-spin
-    .play-again(ng-show="gameStarted && move === 0")
+    .play-again(ng-show="gameStarted && move === 0 && !is2Player")
       button.btn.btn-feault.fa.fa-laptop(ng-click="aiClick()")
+      button.btn.btn-feault.fa.fa-user(ng-click="showPeer()")
     .play-again(ng-show="gameOver && gameStarted")
       button.btn.btn-feault(ng-click="playAgain()") Play Again?
+      button.btn.btn-feault(ng-click="newOpponent()", ng-show="is2Player") New Opponent?

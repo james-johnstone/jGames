@@ -1,5 +1,6 @@
-﻿angular.module('app').controller('tictactoeController', function ($scope, $timeout, appNotifier) {
+﻿angular.module('app').controller('tictactoeController', function ($scope, $timeout, appNotifier, identity) {
 
+    $scope.gameObject;
     $scope.isGreeted = false;
     $scope.isPlaying = false;
     $scope.gameStarted = false
@@ -9,6 +10,114 @@
     $scope.activeTurn;
     $scope.move = 0;
     $scope.isThinking = false;
+    $scope.is2Player = false;
+    $scope.isPlayer1 = true;
+    $scope.isChallenging = false;
+    $scope.opponentID;
+    var peer = new Peer({
+        key: 'lwjd5qra8257b9'
+    });
+    $scope.connection;
+    $scope.peerID;
+
+    peer.on('open', function (id) {
+        $scope.$apply(function () {
+            $scope.peerID = id;
+        });
+    });
+
+    peer.on('connection', function (conn) {
+        $scope.connection = conn;
+        $scope.opponentID = conn.peer;
+
+        $scope.connection.on('open', function () {
+            connectionOpen(2);
+        });
+    });
+
+    $scope.connectToPeer = function () {
+        if (!$scope.opponentID) {
+            appNotifier.notify('Please enter valid peer ID', false);
+            return;
+        }
+
+        $scope.connection = peer.connect($scope.opponentID);
+
+        $scope.connection.on('open', function () {
+            connectionOpen(1);
+        });
+    }
+
+    function connectionOpen(player) {
+        {
+            $scope.is2Player = true;
+            $scope.play(player);
+            var opponent = player == 1 ? 2 : 1;
+
+            appNotifier.notify('Connection made', true);
+
+            // Receive messages
+            $scope.connection.on('data', function (data) {
+                //Probably challenge
+                if (typeof data === 'string') {
+                    if (data == "Challenge!") {
+                        msg = Messenger().post({
+                            message: "Opponent has challenged you to a rematch!",
+                            actions: {
+                                accept: {
+                                    label: "Accept",
+                                    action: function () {
+                                        $scope.connection.send("Challenge Accepted");
+                                        $scope.$apply(function () {
+                                            $scope.challengeAccepted();
+                                        });
+                                        msg.hide();
+                                    }
+                                },
+                                decline: {
+                                    label: "Decline",
+                                    action: function () {
+                                        $scope.connection.send("Challenge Declined");
+                                        msg.hide();
+                                    }
+                                }
+                            }
+                        });
+                    } else if (data == "Challenge Accepted") {
+                        appNotifier.notify('Challenge Accepted', true);
+                        $scope.$apply(function () {
+                            $scope.challengeAccepted();
+                        });
+                    } else if (data == "Challenge Declined") {
+                        appNotifier.notify('Challenge Declined', false);
+                    }
+                    else if (data === "terminate"){
+                      appNotifier.notify('Opponent has left', false);
+                      $scope.$apply(function () {
+                            $scope.newOpponent();
+                      });
+                    }
+                } else {
+                    $scope.$apply(function () {
+                        $scope.applyMove($scope.gameObject, data, opponent);
+                        $scope.checkForWin($scope.gameObject);
+                        $scope.move++;
+                        $scope.activeTurn = player;
+                    })
+                }
+            });
+        }
+    }
+
+    $scope.challengeAccepted = function () {
+        $scope.gameObject = $scope.getEmptyBoard();
+        $scope.move = 0;
+        $scope.gameOver = false;
+    }
+
+    $scope.showPeer = function () {
+        $scope.is2Player = true;
+    }
 
     Array.maxObject = function (array, prop) {
         var values = array.filter(function (el) {
@@ -40,20 +149,21 @@
         new Array(3)];
     }
 
-    $scope.gameObject = $scope.getEmptyBoard();
-
     $scope.greetUser = function () {
         $.each($scope.welcomeText.split(''), function (i, letter) {
             $timeout(function () {
                 $scope.welcome += letter;
                 if ($scope.welcome === $scope.welcomeText) $scope.isGreeted = true;
-            }, 100 * i);
+            }, 1 * i);
         });
     };
 
-    $scope.play = function () {
+    $scope.play = function (player) {
+        $scope.gameObject = $scope.getEmptyBoard();
         $scope.isPlaying = true;
         $scope.activeTurn = 1;
+        $scope.isPlayer1 = player === 1;
+
         $timeout(function () {
             $scope.gameStarted = true;
         }, 1000)
@@ -64,49 +174,84 @@
     }
 
     $scope.gameClick = function (row, index) {
-        if ($scope.activeTurn === 2) return;
-        $scope.activeTurn = 2;
+        if ($scope.move === 0 && !$scope.is2Player)
+          $scope.isPlayer1 = true;
+
+        var playerTurn = $scope.isPlayer1 ? 1 : 2;
+        var opponentTurn = (playerTurn === 1) ? 2 : 1;
+
+        if ($scope.activeTurn !== playerTurn) {
+            appNotifier.notify('Please wait for oponent to move', false);
+            return;
+        }
+
+        $scope.activeTurn = opponentTurn;
 
         if ($scope.gameOver) {
             appNotifier.notify('Game over, please start new game', false);
-            $scope.activeTurn = 1;
+            $scope.activeTurn = playerTurn;
             return;
         }
 
         if ( !! row[index]) {
             appNotifier.notify('Space already taken!', false);
-            $scope.activeTurn = 1;
+            $scope.activeTurn = playerTurn;
             return;
         }
-        row[index] = 1;
+        row[index] = playerTurn;
         $scope.move++;
-
         $scope.checkForWin($scope.gameObject);
 
-        $scope.aiClick();
-
-        $scope.activeTurn = 1;
+        if (!$scope.is2Player) {
+            $scope.aiClick();
+            $scope.activeTurn = playerTurn;
+        } else {
+            $scope.connection.send([$scope.gameObject.indexOf(row), index]);
+        }
     }
 
     $scope.aiClick = function () {
-        if ($scope.gameOver) return;
-        $scope.activeTurn = 2;
+        if ($scope.move === 0) $scope.isPlayer1 = false;
+
+        var playerTurn = $scope.isPlayer1 ? 2 : 1;
+        var oponentTurn = playerTurn ? 2 : 1;
+
+        if ($scope.gameOver) {
+            $scope.activeTurn = oponentTurn;
+            return;
+        }
+
+        $scope.activeTurn = playerTurn;
         $scope.isThinking = true;
 
         var move = $scope.getMinMax($scope.gameObject, 0).move;
         $scope.isThinking = false;
 
-        $scope.applyMove($scope.gameObject, move, 2)
+        $scope.applyMove($scope.gameObject, move, playerTurn)
         $scope.move++;
         $scope.checkForWin($scope.gameObject);
 
-        $scope.activeTurn = 1;
+        $scope.activeTurn = oponentTurn;
     }
 
     $scope.playAgain = function () {
-        $scope.gameObject = $scope.getEmptyBoard();
-        $scope.move = 0;
-        $scope.gameOver = false;
+        if (!$scope.is2Player) {
+            $scope.gameObject = $scope.getEmptyBoard();
+            $scope.move = 0;
+            $scope.gameOver = false;
+        } else $scope.challengeOpponent();
+    }
+
+    $scope.challengeOpponent = function () {
+        $scope.connection.send("Challenge!");
+    }
+
+    $scope.newOpponent = function(){
+      if (!!$scope.connection)
+        $scope.connection.send("terminate");
+      $scope.connection = null;
+      $scope.is2Player = false;
+      $scope.playAgain();
     }
 
     $scope.getMinMax = function (gameState, depth) {
@@ -120,7 +265,7 @@
         return Array.maxObject(possibleMoves.map(function (move) {
             return {
                 'move': move,
-                'score': $scope.getGameStateScore($scope.applyMove(angular.copy(gameState), move, 2), depth)
+                    'score': $scope.getGameStateScore($scope.applyMove(angular.copy(gameState), move, 2), depth)
             };
         }), 'score');
     }
@@ -129,7 +274,7 @@
         return Array.minObject(possibleMoves.map(function (move) {
             return {
                 'move': move,
-                'score': $scope.getGameStateScore($scope.applyMove(angular.copy(gameState), move, 1), depth)
+                    'score': $scope.getGameStateScore($scope.applyMove(angular.copy(gameState), move, 1), depth)
             };
         }), 'score');
     }
@@ -194,9 +339,11 @@
     $scope.checkDiagnals = function (gameBoard) {
         var winner;
 
-        if ( !! gameBoard[0][0] && gameBoard[0][0] === gameBoard[1][1] && gameBoard[0][0] === gameBoard[2][2]) winner = gameBoard[0][0];
+        if ( !! gameBoard[0][0] && gameBoard[0][0] === gameBoard[1][1] && gameBoard[0][0] === gameBoard[2][2])
+          winner = gameBoard[0][0];
 
-        else if ( !! gameBoard[2][0] && gameBoard[2][0] === gameBoard[1][1] && gameBoard[2][0] === gameBoard[0][2]) winner = gameBoard[2][0];
+        else if ( !! gameBoard[2][0] && gameBoard[2][0] === gameBoard[1][1] && gameBoard[2][0] === gameBoard[0][2])
+          winner = gameBoard[2][0];
 
         return winner;
     }
@@ -214,15 +361,19 @@
         var winner;
 
         winner = $scope.checkDiagnals(gameBoard);
-        if ( !! winner) return winner;
+        if ( !! winner)
+          return winner;
 
         winner = $scope.checkHorizontals(gameBoard);
-        if ( !! winner > 0) return winner;
+        if ( !! winner > 0)
+          return winner;
 
         winner = $scope.checkVerticals(gameBoard);
-        if ( !! winner) return winner;
+        if ( !! winner)
+          return winner;
 
-        if ($scope.checkForDraw(gameBoard)) return 0;
+        if ($scope.checkForDraw(gameBoard))
+          return 0;
     }
 
     $scope.checkForDraw = function (gameBoard) {
@@ -240,8 +391,23 @@
         if (winner === 0) {
             appNotifier.notify('Game is a draw!', false);
         } else {
-            appNotifier.notify('Player ' + winner + ' wins!', winner == 1);
+            var win = $scope.isPlayer1 ? (winner == 1) : (winner == 2);
+
+            if (win)
+              appNotifier.notify('You Win!', true);
+            else
+              appNotifier.notify('Opponent Wins!', false);
         }
+    }
+
+    function randomID() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16);
+    }
+
+    function getUserName() {
+        if (identity.isAuthenticated())
+          return randomID() + '-user-' + identity.getUsername();
     }
 
     $scope.greetUser();
