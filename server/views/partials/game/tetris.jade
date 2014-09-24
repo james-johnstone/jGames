@@ -1,0 +1,10 @@
+.container
+  .well.absolute-center.tetris.center#tetris
+
+    .game.animated
+      canvas#tetris-canvas(width="400px", height="600px", style="border:1px solid #ccc;").tetris-canvas
+
+    .play-again(ng-show="gameOver && !controlOptions")
+      button.btn.btn-default(ng-click="showControlls()") Play Again?
+    .play-again
+      button.btn.btn-default(ng-click="mouseControl()") Play

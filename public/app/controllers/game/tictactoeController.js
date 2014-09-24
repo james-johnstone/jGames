@@ -154,7 +154,7 @@
             $timeout(function () {
                 $scope.welcome += letter;
                 if ($scope.welcome === $scope.welcomeText) $scope.isGreeted = true;
-            }, 1 * i);
+            }, 100 * i);
         });
     };
 
