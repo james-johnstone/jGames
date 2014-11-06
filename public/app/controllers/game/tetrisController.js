@@ -35,14 +35,16 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
     Shape.prototype.rotate = function () {
         for (var i = 0; i < this.coords.length; i++) {
             var coord = this.coords[i];
-            if ( !! coord) this.coords[i] = [coord[1], -coord[0]];
+            if (!!coord) this.coords[i] = [coord[1], -coord[0]];
         }
+
+        adjustForOverLaps(this);
     };
 
     Shape.prototype.getLowerY = function () {
         var yCoords = this.coords.map(function (coord) {
-            if ( !! coord) return coord[1];
-        });
+            if (!!coord) return coord[1];
+        }).filter(function (el) { return !!el });;
 
         var max = Math.max.apply(Math, yCoords);
 
@@ -55,8 +57,8 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
     Shape.prototype.getHeight = function () {
         var yCoords = this.coords.map(function (coord) {
-            if ( !! coord) return coord[1];
-        })
+            if (!!coord) return coord[1];
+        }).filter(function (el) { return !!el });
 
         var min = Math.min.apply(Math, yCoords);
         var max = Math.max.apply(Math, yCoords);
@@ -66,8 +68,8 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
     Shape.prototype.getLowerX = function () {
         var xCoords = this.coords.map(function (coord) {
-            if ( !! coord) return coord[0];
-        })
+            if (!!coord) return coord[0];
+        }).filter(function (el) { return !!el });
 
         var x = Math.min.apply(Math, xCoords) * -1;
 
@@ -80,8 +82,8 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
     Shape.prototype.getWidth = function () {
         var xCoords = this.coords.map(function (coord) {
-            if ( !! coord) return coord[0];
-        })
+            if (!!coord) return coord[0];
+        }).filter(function (el) { return !!el });
 
         var min = Math.min.apply(Math, xCoords);
         var max = Math.max.apply(Math, xCoords);
@@ -168,18 +170,33 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
     Point.prototype = new Shape();
 
     var possibleShapes = [new Square(), new Line(), new LShape(), new ReverseL(), new SShape(), new ReverseS(), new Point()];
+    //var possibleShapes = [new SShape(), new ReverseS()];
+
+    function adjustForOverLaps(shape) {
+        var trueX = shape.getTrueX();
+        var width = shape.getWidth();
+        var farX = trueX + width;
+        var overLap = farX - canvas.width;
+
+        if (trueX < 0) {
+            shape.position.x -= trueX;
+        }
+
+        if (overLap > 0) shape.position.x -= overLap;
+    }
 
     function drawShape(shape) {
         context.fillStyle = shape.colour;
 
         for (var i = 0; i < shape.coords.length; i++) {
-            if ( !! shape.coords[i]) {
+            if (!!shape.coords[i]) {
                 var x = shape.position.x + (shape.coords[i][0] * shapeSize);
                 var y = shape.position.y + (shape.coords[i][1] * shapeSize);
 
                 context.fillRect(x, y, shapeSize, shapeSize);
 
-                context.strokeStyle = shadeColor(shape.colour, 20);
+                //context.strokeStyle = shadeColor(shape.colour, 20);
+                context.strokeStyle = shadeColor('#ccc', 20);
                 context.lineWidth = 2;
                 context.strokeRect(x, y, shapeSize, shapeSize);
             }
@@ -202,8 +219,8 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
     function updateState() {
         updateCurrentBlock();
-        checkForCompleteLine();
     }
+
 
     function checkForCompleteLine() {
         var maxLines = canvas.height / shapeSize;
@@ -239,61 +256,96 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
                 if (line === index) {
                     activeBlocks[i].coords[j] = null;
-                } else if (line > index) {
-                    activeBlocks[i].position.y += shapeSize;
                 }
             }
             if (isEmpty(activeBlocks[i])) {
                 emptyIndicies.push(i);
             }
         }
-
+        // remove empty blocks
         activeBlocks.multisplice(emptyIndicies);
+        // shift remaining blocks down
+        for (var i = 0; i < activeBlocks.length; i++) {
+            activeBlocks[i].position.y += shapeSize;
+        }
     }
 
     function isEmpty(shape) {
         for (var i = 0; i < shape.coords.length; i++) {
-            if ( !! shape.coords[i]) return false;
+            if (!!shape.coords[i]) return false;
         }
         return true;
     }
 
     function updateCurrentBlock() {
-        currentBlock.position.y += speed;
+        var attemptedMove = angular.copy(currentBlock);
+        attemptedMove.position.y += speed;
 
-        var trueX = currentBlock.getTrueX();
-        var width = currentBlock.getWidth();
-        var farX = trueX + width;
-        var overLap = farX - canvas.width;
-
-        if (trueX < 0) {
-            currentBlock.position.x -= trueX;
-        }
-
-        if (overLap > 0) currentBlock.position.x -= overLap;
+        // can happen if the user speeds up game and the new speed doesn't stop flushly against static blocks
+        if (isInvalidPossition(attemptedMove))
+            speed = 2;
+        else
+            currentBlock.position.y += speed;
 
         checkCollissions();
     }
 
-    function isCollission(direction) {
+    function checkCollissions() {
+        // base hit, new block
+        if (currentBlock.position.y + currentBlock.getLowerY() >= canvas.height - 1) {
+            addNewBlock();
+            checkForCompleteLine();
+        }
+        else {
+            for (var i = 0; i < activeBlocks.length; i++) {
+                var staticBlock = activeBlocks[i];
+
+                // possible collission check for overlaps
+                if (currentBlock.position.y + currentBlock.getLowerY() >= staticBlock.getTrueY()) {
+                    var normalizedCurrentBlock = getNormalizedCoords(currentBlock);
+                    var normalizedStatic = getNormalizedCoords(staticBlock);
+
+                    for (var j = 0; j < normalizedCurrentBlock.length; j++) {
+                        var coord = normalizedCurrentBlock[j];
+
+                        for (var k = 0; k < normalizedStatic.length; k++) {
+                            var staticCoord = normalizedStatic[k];
+
+                            if (coord[0] == staticCoord[0] && ((coord[1] + shapeSize) == staticCoord[1] || (coord[1] + shapeSize > staticCoord[1] && coord[1] + shapeSize < staticCoord[1] + shapeSize))) {
+                                //check for game over
+                                checkForCompleteLine();
+                                if (currentBlock.getTrueY() < 0) {
+                                    newGame();
+                                    return;
+                                }
+                                addNewBlock();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function isOverLappingActiveBlocks(shape) {
         for (var i = 0; i < activeBlocks.length; i++) {
             var staticBlock = activeBlocks[i];
 
             // possible collission check for overlaps
-            if (currentBlock.position.y + currentBlock.getLowerY() >= staticBlock.getTrueY()) {
-                var normalizedCurrentBlock = getNormalizedCoords(currentBlock);
+            // only overlap if lower than upper Y of static block
+            if (shape.position.y + shape.getLowerY() > staticBlock.getTrueY()) {
+                //normalize coords
+                var normalizedCurrentBlock = getNormalizedCoords(shape);
                 var normalizedStatic = getNormalizedCoords(staticBlock);
 
                 for (var j = 0; j < normalizedCurrentBlock.length; j++) {
                     var coord = normalizedCurrentBlock[j];
-                    //check if horizontal movement would cause collission
-                    coord[0] += direction;
-                    coord[1] += shapeSize;
-
+                    // check each static coord against each corrd of given shape
                     for (var k = 0; k < normalizedStatic.length; k++) {
                         var staticCoord = normalizedStatic[k];
-
-                        if (coord[0] == staticCoord[0] && coord[1] >= staticCoord[1] && coord[1] <= staticCoord[1] + shapeSize) {
+                        // coord[0] is x, they must match, y must overlap completely, or y must fall within the static coord boundaries
+                        if (coord[0] == staticCoord[0] && (coord[1] == staticCoord[1] || (coord[1] + shapeSize > staticCoord[1] && coord[1] < staticCoord[1] + shapeSize))) {
                             return true;
                         }
                     }
@@ -302,37 +354,32 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
         }
     }
 
-    function checkCollissions() {
-        // base hit, new block
-        if (currentBlock.position.y + currentBlock.getLowerY() >= canvas.height - 1) addNewBlock();
+    function isBreakingLeftBoundary(shape) {
+        return shape.getTrueX() < 0;
+    }
 
-        for (var i = 0; i < activeBlocks.length; i++) {
-            var staticBlock = activeBlocks[i];
+    function isBreakingRightBoundary(shape) {
+        return shape.getTrueX() + shape.getWidth() > canvas.width;
+    }
 
-            // possible collission check for overlaps
-            if (currentBlock.position.y + currentBlock.getLowerY() >= staticBlock.getTrueY()) {
-                var normalizedCurrentBlock = getNormalizedCoords(currentBlock);
-                var normalizedStatic = getNormalizedCoords(staticBlock);
+    function isBreakingLowerBoundary(shape) {
+        return shape.position.y + shape.getLowerY() > canvas.height
+    }
 
-                for (var j = 0; j < normalizedCurrentBlock.length; j++) {
-                    var coord = normalizedCurrentBlock[j];
+    function tryRotate(shape) {
+        var attemptedRotation = angular.copy(shape);
 
-                    for (var k = 0; k < normalizedStatic.length; k++) {
-                        var staticCoord = normalizedStatic[k];
+        attemptedRotation.rotate();
+        // if the attempted rotation will cause any overlaps, do not allow.
+        if (isInvalidPossition(attemptedRotation))
+            return;
 
-                        if (coord[0] == staticCoord[0] && (coord[1] + shapeSize) == staticCoord[1]) {
-                            //check for game over
-                            if (currentBlock.getTrueY() < 0) {
-                                newGame();
-                                return;
-                            }
-                            addNewBlock();
-                            return;
-                        }
-                    }
-                }
-            }
-        }
+        shape.rotate();
+    }
+
+    function isInvalidPossition(shape) {
+        return (isBreakingLeftBoundary(shape) || isBreakingRightBoundary(shape)
+                            || isBreakingLowerBoundary(shape) || isOverLappingActiveBlocks(shape))
     }
 
     function getNormalizedCoords(shape) {
@@ -340,7 +387,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
         for (var i = 0; i < shape.coords.length; i++) {
             var coord = shape.coords[i];
-            if ( !! coord) normalizedCoords.push([shape.position.x + (coord[0] * shapeSize), shape.position.y + (coord[1] * shapeSize)]);
+            if (!!coord) normalizedCoords.push([shape.position.x + (coord[0] * shapeSize), shape.position.y + (coord[1] * shapeSize)]);
         }
         return normalizedCoords;
     }
@@ -349,6 +396,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
         activeBlocks.push(currentBlock);
         currentBlock = nextBlock;
         nextBlock = getRandomShape();
+        speed = 2;
     }
 
     function initGame() {
@@ -366,10 +414,64 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
         var newShape = angular.copy(possibleShapes[index]);
         newShape.position = {
             'x': (canvas.width / 2) - (shapeSize / 2),
-                'y': -shapeSize
+            'y': -shapeSize
         };
         return newShape;
     }
+
+    function newGame() {
+        initGame();
+    }
+
+    window.addEventListener("keydown", function (e) {
+        if (e.keyCode == UP_KEY)
+            tryRotate(currentBlock);
+
+        if (e.keyCode == LEFT_KEY)
+            moveLeft();
+
+        if (e.keyCode == RIGHT_KEY)
+            moveRight();
+
+        if (e.keyCode == DOWN_KEY)
+            speedUp();
+    });
+
+    window.addEventListener("keyup", function (e) {
+        if (e.keyCode == DOWN_KEY)
+            speedDown();
+    });
+
+    function moveLeft() {
+        var attemptedPossition = angular.copy(currentBlock);
+        attemptedPossition.position.x -= shapeSize;
+
+        if (isInvalidPossition(attemptedPossition))
+            return
+
+        currentBlock.position.x -= shapeSize;
+    }
+
+    function moveRight() {
+        var attemptedPossition = angular.copy(currentBlock);
+        attemptedPossition.position.x += shapeSize;
+
+        if (isInvalidPossition(attemptedPossition))
+            return
+
+        currentBlock.position.x += shapeSize;
+    }
+
+    function speedUp() {
+        speed = 6;
+    }
+
+    function speedDown() {
+        speed = 2;
+    }
+
+    newGame();
+    animate();
 
     function shadeColor(color, percent) {
         var f = parseInt(color.slice(1), 16),
@@ -380,35 +482,4 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
             B = f & 0x0000FF;
         return "#" + (0x1000000 + (Math.round((t - R) * p) + R) * 0x10000 + (Math.round((t - G) * p) + G) * 0x100 + (Math.round((t - B) * p) + B)).toString(16).slice(1);
     }
-
-    function newGame() {
-        initGame();
-    }
-
-    window.addEventListener("keydown", function (e) {
-        if (e.keyCode == UP_KEY) {
-            currentBlock.rotate();
-        }
-        if (e.keyCode == LEFT_KEY) {
-            if (currentBlock.position.x - currentBlock.getLowerX() > 0) if (!isCollission(-shapeSize)) currentBlock.position.x -= shapeSize;
-        }
-
-        if (e.keyCode == RIGHT_KEY) {
-            if (currentBlock.position.x + shapeSize <= canvas.width) if (!isCollission(shapeSize)) currentBlock.position.x += shapeSize
-        }
-
-        if (e.keyCode == DOWN_KEY) {
-            speed =6;
-        }
-    });
-
-    window.addEventListener("keyup", function (e) {
-        if (e.keyCode == DOWN_KEY) {
-            speed =2;
-        }
-    });
-
-    newGame();
-    animate();
-
 });
