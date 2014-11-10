@@ -171,3 +171,10 @@ select {
 .tetris .tetris-canvas {
   margin-top: 20px;
 }
+.tetris .tetris-next-shape {
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  margin-left: 20px;
+  margin-top: 20px;
+}

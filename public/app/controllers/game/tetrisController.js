@@ -3,8 +3,8 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
     var canvas = document.getElementById('tetris-canvas');
     var context = canvas.getContext('2d');
 
-    // canvas.height = document.getElementById('tetris').offsetHeight - 84;
-    // canvas.width = document.getElementById('tetris').offsetWidth ;
+    var secondaryCanvas = document.getElementById('tetris-next-shape');
+    var secondaryContext = secondaryCanvas.getContext('2d');
 
     $scope.playerScore;
     var gameBoard, gameLevel, blockInterval, speed, currentBlock, nextBlock;
@@ -20,8 +20,8 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
         args.sort(function (a, b) {
             return a - b;
         });
-        for (var i = 0; i < args.length; i++) {
-            var index = args[i] - i;
+        for (var i = 0; i < args[0].length; i++) {
+            var index = args[0][i] -i;
             this.splice(index, 1);
         }
     }
@@ -41,13 +41,15 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
         adjustForOverLaps(this);
     };
 
-    Shape.prototype.getLowerY = function () {
-        var yCoords = this.coords.map(function (coord) {
-            if (!!coord) return coord[1];
+    Shape.prototype.getCoords = function (index) {
+        return this.coords.map(function (coord) {
+            if (!!coord) return coord[index];
         }).filter(function (el) { return !!el });;
+    }
 
+    Shape.prototype.getLowerY = function () {
+        var yCoords = this.getCoords(1);
         var max = Math.max.apply(Math, yCoords);
-
         return (max + 1) * shapeSize;
     }
 
@@ -56,9 +58,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
     }
 
     Shape.prototype.getHeight = function () {
-        var yCoords = this.coords.map(function (coord) {
-            if (!!coord) return coord[1];
-        }).filter(function (el) { return !!el });
+        var yCoords = this.getCoords(1);
 
         var min = Math.min.apply(Math, yCoords);
         var max = Math.max.apply(Math, yCoords);
@@ -67,12 +67,8 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
     }
 
     Shape.prototype.getLowerX = function () {
-        var xCoords = this.coords.map(function (coord) {
-            if (!!coord) return coord[0];
-        }).filter(function (el) { return !!el });
-
+        var xCoords = this.getCoords(0);
         var x = Math.min.apply(Math, xCoords) * -1;
-
         return x * shapeSize;
     }
 
@@ -81,9 +77,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
     }
 
     Shape.prototype.getWidth = function () {
-        var xCoords = this.coords.map(function (coord) {
-            if (!!coord) return coord[0];
-        }).filter(function (el) { return !!el });
+        var xCoords = this.getCoords(0);
 
         var min = Math.min.apply(Math, xCoords);
         var max = Math.max.apply(Math, xCoords);
@@ -116,20 +110,20 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
     function LShape() {
         this.coords = [
-            [0.5, -1.5],
-            [0.5, -0.5],
-            [0.5, 0.5],
-            [1.5, 0.5]
+            [-0.5, -0.5],
+            [-0.5, 0.5],
+            [-0.5, -1.5],
+            [0.5, 0.5]
         ];
-        this.colour = '#C25647';
+        this.colour = '#D3E2A7';
     }
     LShape.prototype = new Shape();
 
     function ReverseL() {
         this.coords = [
-            [0.5, -0.5],
-            [0.5, -1.5],
+            [0.5, -0.5],            
             [0.5, 0.5],
+            [0.5, -1.5],
             [-0.5, 0.5]
         ];
         this.colour = '#6D39AC';
@@ -170,7 +164,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
     Point.prototype = new Shape();
 
     var possibleShapes = [new Square(), new Line(), new LShape(), new ReverseL(), new SShape(), new ReverseS(), new Point()];
-    //var possibleShapes = [new SShape(), new ReverseS()];
+    //var possibleShapes = [new LShape()];
 
     function adjustForOverLaps(shape) {
         var trueX = shape.getTrueX();
@@ -185,7 +179,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
         if (overLap > 0) shape.position.x -= overLap;
     }
 
-    function drawShape(shape) {
+    function drawShape(context, shape) {
         context.fillStyle = shape.colour;
 
         for (var i = 0; i < shape.coords.length; i++) {
@@ -194,9 +188,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
                 var y = shape.position.y + (shape.coords[i][1] * shapeSize);
 
                 context.fillRect(x, y, shapeSize, shapeSize);
-
-                //context.strokeStyle = shadeColor(shape.colour, 20);
-                context.strokeStyle = shadeColor('#ccc', 20);
+                context.strokeStyle = '#222';
                 context.lineWidth = 2;
                 context.strokeRect(x, y, shapeSize, shapeSize);
             }
@@ -211,10 +203,12 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
     function draw() {
         context.clearRect(0, 0, canvas.width, canvas.height);
+        secondaryContext.clearRect(0, 0, secondaryCanvas.width, secondaryCanvas.height);
         for (var i = 0; i < activeBlocks.length; i++) {
-            drawShape(activeBlocks[i]);
+            drawShape(context,activeBlocks[i]);
         }
-        drawShape(currentBlock);
+        drawShape(context, currentBlock);
+        drawShape(secondaryContext, nextBlock);
     }
 
     function updateState() {
@@ -231,8 +225,9 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
             for (var j = 0; j < normalizedCoords.length; j++) {
                 var coord = normalizedCoords[j];
+                if (!coord)
+                    continue
                 var line = (canvas.height - coord[1] - shapeSize) / shapeSize;
-
                 lines[line]++;
             }
         }
@@ -240,6 +235,13 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
         for (var i = 0; i < lines.length; i++) {
             if (lines[i] >= canvas.width / shapeSize) {
                 clearLine(i)
+            }
+        }
+        
+        for (var i = 0,comboCount = 0; i < lines.length; i++) {
+            if (lines[i] >= canvas.width / shapeSize) {
+                moveBlocksDown(i, comboCount)
+                comboCount++;
             }
         }
     }
@@ -252,8 +254,10 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
             for (var j = 0; j < normalizedCoords.length; j++) {
                 var coord = normalizedCoords[j];
-                var line = (canvas.height - coord[1] - shapeSize) / shapeSize;
+                if (!coord)
+                    continue;
 
+                var line = (canvas.height - coord[1] - shapeSize) / shapeSize;
                 if (line === index) {
                     activeBlocks[i].coords[j] = null;
                 }
@@ -263,10 +267,25 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
             }
         }
         // remove empty blocks
-        activeBlocks.multisplice(emptyIndicies);
-        // shift remaining blocks down
+        activeBlocks.multisplice(emptyIndicies);        
+    }
+
+    function moveBlocksDown(index, comboCount) {
         for (var i = 0; i < activeBlocks.length; i++) {
-            activeBlocks[i].position.y += shapeSize;
+            var normalizedCoords = getNormalizedCoords(activeBlocks[i]);
+
+            for (var j = 0; j < normalizedCoords.length; j++) {
+                var coord = normalizedCoords[j];
+                if (!coord)
+                    continue;
+
+                var line = (canvas.height - coord[1] - shapeSize) / shapeSize;
+                // add the combo count to find the origonal line
+                if ((line + comboCount) > index) {
+                    // shift remaining blocks down
+                    activeBlocks[i].coords[j][1] += 1;
+                }
+            }
         }
     }
 
@@ -307,18 +326,21 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
                     for (var j = 0; j < normalizedCurrentBlock.length; j++) {
                         var coord = normalizedCurrentBlock[j];
-
+                        if (!coord)
+                            continue;
                         for (var k = 0; k < normalizedStatic.length; k++) {
                             var staticCoord = normalizedStatic[k];
+                            if (!staticCoord)
+                                continue;
 
                             if (coord[0] == staticCoord[0] && ((coord[1] + shapeSize) == staticCoord[1] || (coord[1] + shapeSize > staticCoord[1] && coord[1] + shapeSize < staticCoord[1] + shapeSize))) {
                                 //check for game over
-                                checkForCompleteLine();
                                 if (currentBlock.getTrueY() < 0) {
                                     newGame();
                                     return;
                                 }
                                 addNewBlock();
+                                checkForCompleteLine();
                                 return;
                             }
                         }
@@ -341,9 +363,13 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
                 for (var j = 0; j < normalizedCurrentBlock.length; j++) {
                     var coord = normalizedCurrentBlock[j];
+                    if (!coord)
+                        continue;
                     // check each static coord against each corrd of given shape
                     for (var k = 0; k < normalizedStatic.length; k++) {
                         var staticCoord = normalizedStatic[k];
+                        if (!staticCoord)
+                            continue;
                         // coord[0] is x, they must match, y must overlap completely, or y must fall within the static coord boundaries
                         if (coord[0] == staticCoord[0] && (coord[1] == staticCoord[1] || (coord[1] + shapeSize > staticCoord[1] && coord[1] < staticCoord[1] + shapeSize))) {
                             return true;
@@ -387,15 +413,22 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
         for (var i = 0; i < shape.coords.length; i++) {
             var coord = shape.coords[i];
-            if (!!coord) normalizedCoords.push([shape.position.x + (coord[0] * shapeSize), shape.position.y + (coord[1] * shapeSize)]);
+            if (!!coord)
+                normalizedCoords.push([shape.position.x + (coord[0] * shapeSize), shape.position.y + (coord[1] * shapeSize)]);
+            else
+                normalizedCoords.push(null);
         }
         return normalizedCoords;
     }
 
     function addNewBlock() {
         activeBlocks.push(currentBlock);
-        currentBlock = nextBlock;
-        nextBlock = getRandomShape();
+        currentBlock = angular.copy(nextBlock);
+
+        currentBlock.position.y = 0
+        currentBlock.position.x = (canvas.width / 2) - (shapeSize / 2);
+
+        initNextBlock();
         speed = 2;
     }
 
@@ -405,7 +438,13 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
         speed = 2;
         activeBlocks = [];
         currentBlock = getRandomShape();
+        initNextBlock();
+    }
+
+    function initNextBlock() {
         nextBlock = getRandomShape();
+        nextBlock.position.y = secondaryCanvas.height / 2;
+        nextBlock.position.x = (secondaryCanvas.width / 2) - (shapeSize / 2);
     }
 
     function getRandomShape() {
@@ -472,14 +511,4 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
     newGame();
     animate();
-
-    function shadeColor(color, percent) {
-        var f = parseInt(color.slice(1), 16),
-            t = percent < 0 ? 0 : 255,
-            p = percent < 0 ? percent * -1 : percent,
-            R = f >> 16,
-            G = f >> 8 & 0x00FF,
-            B = f & 0x0000FF;
-        return "#" + (0x1000000 + (Math.round((t - R) * p) + R) * 0x10000 + (Math.round((t - G) * p) + G) * 0x100 + (Math.round((t - B) * p) + B)).toString(16).slice(1);
-    }
 });

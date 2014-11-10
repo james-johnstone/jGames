@@ -3,6 +3,7 @@
 
     .game.animated
       canvas#tetris-canvas(width="400px", height="600px", style="border:1px solid #ccc;").tetris-canvas
+      canvas#tetris-next-shape(width="120px", height="120px", style="border:1px solid #ccc;").tetris-next-shape
 
     .play-again(ng-show="gameOver && !controlOptions")
       button.btn.btn-default(ng-click="showControlls()") Play Again?
