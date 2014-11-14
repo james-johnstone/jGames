@@ -1,5 +1,5 @@
-﻿ul.nav.navbar-nav.navbar-right(ng-show="identity.isAuthenticated()")
-    li.dropdown
+﻿ul.nav.navbar-nav.navbar-right
+    li.dropdown(ng-show="identity.isAuthenticated()")
         a.dropdown-toggle(data-toggle="dropdown" href="#") {{identity.getUsername()}}
             b.caret
         ul.dropdown-menu
@@ -7,3 +7,9 @@
                 a(href="/profile") Profile
             li
                 a(href="", ng-click="signout()") Sign Out
+    li.dropdown
+        a.dropdown-toggle(data-toggle="dropdown" href="#") themes
+            b.caret
+        ul.dropdown-menu
+            li(ng-repeat="theme in themes")
+                a(ng-click="changeTheme(theme)") {{theme.name}}

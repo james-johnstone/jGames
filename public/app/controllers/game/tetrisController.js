@@ -6,8 +6,8 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
     var secondaryCanvas = document.getElementById('tetris-next-shape');
     var secondaryContext = secondaryCanvas.getContext('2d');
 
-    $scope.playerScore;
-    var gameBoard, gameLevel, blockInterval, speed, currentBlock, nextBlock;
+    $scope.playerScore = 0;
+    var gameBoard, gameLevel, linesCleared, blockInterval, speed, currentBlock, nextBlock;
     var shapeSize = 20;
     var activeBlocks = [];
     var LEFT_KEY = 37;
@@ -213,6 +213,11 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
     function updateState() {
         updateCurrentBlock();
+
+        if (linesCleared >= 10) {
+            gameLevel++;
+            linesCleared = 0;
+        }
     }
 
 
@@ -234,12 +239,16 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
         for (var i = 0; i < lines.length; i++) {
             if (lines[i] >= canvas.width / shapeSize) {
-                clearLine(i)
+                clearLine(i);
+                linesCleared++;
             }
         }
         
         for (var i = 0,comboCount = 0; i < lines.length; i++) {
             if (lines[i] >= canvas.width / shapeSize) {
+                $scope.$apply(function () {
+                    $scope.playerScore += 10 +  (comboCount *5);
+                });
                 moveBlocksDown(i, comboCount)
                 comboCount++;
             }
@@ -429,11 +438,12 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
         currentBlock.position.x = (canvas.width / 2) - (shapeSize / 2);
 
         initNextBlock();
-        speed = 2;
+        speedDown();
     }
 
     function initGame() {
         gameLevel = 1;
+        linesCleared = 0;
         blockInterval = 20;
         speed = 2;
         activeBlocks = [];
@@ -502,11 +512,11 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
     }
 
     function speedUp() {
-        speed = 6;
+        speed = 6 * gameLevel;
     }
 
     function speedDown() {
-        speed = 2;
+        speed = 2 * gameLevel;
     }
 
     newGame();

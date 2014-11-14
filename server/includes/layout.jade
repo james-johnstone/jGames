@@ -1,18 +1,19 @@
 doctype html
 
-html
+html(ng-app='app' ng-controller='themeController')
 	head
 		title J Games
 		link(href="/flavicon.ico", rel="shortcur icon", type="image/x-icon")
 		link(rel="stylesheet", href="/css/bootstrap-cyborg.css")
-		link(rel="stylesheet" href="/dependancies/font-awesome/css/font-awesome.min.css")
+		link(rel="stylesheet", ng-href="/css/{{currentTheme.url}}")
+		link(rel="stylesheet", href="/dependancies/font-awesome/css/font-awesome.min.css")
 		link(rel="stylesheet", href="/dependancies/messenger/build/css/messenger.css")
 		link(rel="stylesheet", href="/dependancies/messenger/build/css/messenger-spinner.css")
 		link(rel="stylesheet", href="/dependancies/messenger/build/css/messenger-theme-future.css")
 		link(rel="stylesheet", href="/dependancies/toastr/toastr.css")
 		link(rel="stylesheet", href="/css/animate.css")
 		link(rel="stylesheet", href="/css/app.css")
-	body(ng-app='app')
+	body
 		include currentUser
 		block main-content
 	include scripts

@@ -22,6 +22,7 @@ angular.module('app').config(function ($routeProvider, $locationProvider) {
         .when('/play/tictactoe', {templateUrl: '/partials/game/tictactoe', controller: 'tictactoeController'})
         .when('/play/pong', {templateUrl: '/partials/game/pong', controller: 'pongController'})
         .when('/play/tetris', {templateUrl: '/partials/game/tetris', controller: 'tetrisController'})
+        .when('/ai/gameoflife', {templateUrl:'/partials/ai/game-of-life', controller:'gameoflifeController'})
         .when('/profile', {
             templateUrl: '/partials/user/user-profile',
             controller: 'userProfileController',

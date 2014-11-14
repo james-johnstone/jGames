@@ -57,8 +57,7 @@ select {
 .tetris button {
   margin: 8px;
 }
-.pong .score,
-.tetris .score {
+.pong .score {
   width: 146px;
   height: 32px;
   border: 1px solid #fff;
@@ -69,13 +68,11 @@ select {
   font-family: monospace;
   padding-left: 4px;
 }
-.pong .aiScore,
-.tetris .aiScore {
+.pong .aiScore {
   float: left;
   width: 84px;
 }
-.pong .playerScore,
-.tetris .playerScore {
+.pong .playerScore {
   float: right;
   margin-right: 10px;
 }
@@ -177,4 +174,19 @@ select {
   position: absolute;
   margin-left: 20px;
   margin-top: 20px;
+}
+.tetris .player-score {
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  margin-left: 20px;
+  margin-top: 170px;
+  border: 1px solid #ccc;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: monospace;
+  padding-left: 4px;
+}
+.tetris .score {
+  margin-top: 45px;
 }
