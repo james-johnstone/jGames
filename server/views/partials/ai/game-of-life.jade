@@ -1,1 +1,13 @@
 .container
+  .well.game-of-life
+    canvas#game-of-life-canvas
+  .well
+    .btn.btn-default(ng-click="initState()") Reset
+    .btn.btn-default(ng-click="restart()") Restart
+    div Speed:
+      input(type="range", name="speed", min="0", max="20", ng-model="speed")
+    div Matrix Size
+      input(type="range", name="columns", min="20", max="100", ng-model="matrix.columns")
+      input(type="range", name="columns", min="20", max="60", ng-model="matrix.rows")
+    div Population density
+      input(type="range", name="columns", min="5", max="50", ng-model="matrix.initialPopulation")

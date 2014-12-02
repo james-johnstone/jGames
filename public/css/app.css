@@ -190,3 +190,9 @@ select {
 .tetris .score {
   margin-top: 45px;
 }
+.game-of-life {
+  text-align: center;
+}
+.well.game-of-life {
+  background-color: #151515;
+}
