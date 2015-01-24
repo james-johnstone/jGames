@@ -134,7 +134,7 @@ NeuralNetwork.prototype.train = function(data){
   if (!data.hasOwnProperty("length"))
     throw new Error("train function must provide an array of training data");
 
-  var errorThreshold = 0.005;
+  var errorThreshold = 0.05;
   var iterations = 20000;
   var learningRate = 0.3;
 
@@ -152,6 +152,8 @@ NeuralNetwork.prototype.train = function(data){
   }
 
   console.log('done');
+  console.log('interations: ' + iterations);
+  console.log('error: ' + error);
 }
 
 NeuralNetwork.prototype.trainPattern = function(input, target, learningRate){
@@ -159,8 +161,8 @@ NeuralNetwork.prototype.trainPattern = function(input, target, learningRate){
   var errors = [];
   var netError = 0;
 
-  for (var i = 0; i < target.length; i++) {
-     var delta  = target[i] - networkOutput[i];
+  for (var i = 0; i < this.outputs.length; i++) {
+     var delta  = (target[i] || 0) - networkOutput[i];
      netError+= (delta * delta)/2;
      errors.push(delta);
   }
@@ -186,10 +188,5 @@ NeuralNetwork.prototype.adjustWeights = function(errors, learningRate){
           this.hiddenLayers[j][k].adjustWeights(inputLayer, outputLayer[k], outputError, learningRate);
       }
     }
-
-//    for (var j = 0; j < this.inputLayer.length; j++) {
-//        var output = this.activationOutputs[0];
-//        this.inputLayer[j].adjustWeights(output[j], outputError, learningRate);
-//    }
   }
 }
