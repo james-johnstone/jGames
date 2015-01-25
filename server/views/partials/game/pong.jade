@@ -1,10 +1,10 @@
-.container
-  .well.absolute-center.pong.center#pong
+.container.transition
+  .well.absolute-center.pong.center.transition#pong
 
-    .game.animated
+    .game.animated.transition
       #aiScore.score.aiScore Ai : {{aiScore}}
       #playerScore.score.playerScore Player 1 : {{playerScore}}
-      canvas#pong-canvas(width="1500px", height="650px", style="border:1px solid #ccc;").pong-canvas
+      canvas#pong-canvas.transition(width="1500px", height="650px", style="border:1px solid #ccc;").pong-canvas
 
     .play-again(ng-show="gameOver && !controlOptions")
       button.btn.btn-default(ng-click="showControlls()") Play Again?

@@ -7,8 +7,8 @@ angular.module('app').controller('gameoflifeController', function($scope){
   $scope.gridSize = 10;
   $scope.speed = 20;
   $scope.matrix = {
-    'columns': 60,
-    'rows' : 30,
+    'columns': Math.round((window.innerWidth -20) / 10,0),
+    'rows' :  Math.round((window.innerHeight -40) / 20,0),
     'initialPopulation' : 10
   };
   $scope.initialState;

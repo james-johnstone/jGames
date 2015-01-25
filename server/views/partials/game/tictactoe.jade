@@ -1,5 +1,5 @@
 .container
-  .well.absolute-center.tictactoe.center
+  .well.absolute-center.tictactoe.center.transition
     .welcome.animated(ng-show="!isPlaying")
       h2 {{welcome}}
 
@@ -7,11 +7,11 @@
         .btn.btn-default(ng-click="play()") Yes
 
     .game.animated(ng-show="gameStarted")
-      .game-row(data-ng-repeat="row in gameObject track by $index")
-        .column(ng-repeat="col in row track by $index",
+      .game-row.transitionResize(data-ng-repeat="row in gameObject track by $index")
+        .column.transitionResize(ng-repeat="col in row track by $index",
             ng-class="{'empty' : !col ,  'fa fa-times' : col == 1 ,  'fa fa-check' : col == 2 }",
             ng-click="gameClick(row, $index)")
-    .peer-details(ng-show="is2Player")
+    .peer-details.transition(ng-show="is2Player")
       .panel.panel-primary
         .panel-heading
           .panel-title Connection Details

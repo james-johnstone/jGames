@@ -5,6 +5,13 @@ body {
 footer {
   padding-left: 15px;
   padding-right: 15px;
+  pointer-events: none;
+}
+.transition {
+  transition: All 2s;
+}
+.transitionResize {
+  transition: width 2s, height 2s;
 }
 .navbar-form {
   max-width: 604px;
@@ -15,6 +22,9 @@ footer {
 }
 .navbar-form button {
   margin-left: 10px;
+}
+.well {
+  padding: 0;
 }
 .auth-area a {
   margin: 4px;
@@ -43,7 +53,6 @@ select {
 }
 .absolute-center {
   margin: auto;
-  position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
@@ -78,7 +87,7 @@ select {
 }
 .tictactoe {
   height: 480px;
-  width: 80%;
+  width: 92%;
   background: #101010;
   text-align: center;
 }
@@ -106,6 +115,7 @@ select {
   border: 1px solid;
 }
 .tictactoe .game-row {
+  border: none !important;
   float: left;
 }
 .tictactoe .please-wait {
@@ -195,4 +205,110 @@ select {
 }
 .well.game-of-life {
   background-color: #151515;
+}
+@media (max-height: 550px) {
+  .footer {
+    text-align: right;
+  }
+  .footer.navbar {
+    min-height: 20px;
+  }
+  .navbar {
+    margin-bottom: 2px;
+  }
+}
+@media (max-height: 500px) {
+  .tictactoe {
+    height: 100%;
+  }
+  .tictactoe .game {
+    height: 236px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+  .tictactoe button {
+    margin: 6px;
+  }
+  .tictactoe .game div {
+    width: 80px;
+    height: 80px;
+  }
+  .tictactoe .game .fa {
+    font-size: 56px;
+  }
+}
+@media (max-height: 380px) {
+  .tictactoe .game {
+    height: 206px;
+  }
+  .tictactoe .game div {
+    width: 70px;
+    height: 70px;
+  }
+}
+@media (max-width: 1400px) {
+  .pong {
+    width: 100%;
+  }
+  .pong canvas {
+    width: 94%;
+  }
+}
+@media (max-width: 992px) {
+  .tictactoe .peer-details {
+    width: 180px;
+    top: 60px;
+  }
+}
+@media (max-width: 880px) {
+  .tictactoe .peer-details {
+    right: 24px;
+  }
+}
+@media (max-width: 700px) {
+  .tictactoe .peer-details {
+    right: 16px;
+  }
+  .panel-body {
+    padding: 6px;
+  }
+  .tictactoe .peer-details {
+    width: 164px;
+  }
+  .panel-title {
+    font-size: 14px;
+  }
+  .panel-heading {
+    padding: 6px;
+  }
+}
+@media (max-width: 400px) {
+  .tictactoe .game div {
+    width: 104px;
+    height: 104px;
+  }
+  .tictactoe .game div {
+    width: 96px;
+    height: 96px;
+  }
+}
+@media (max-width: 380px) {
+  .tictactoe .game {
+    height: 220px;
+  }
+  .tictactoe .game div {
+    width: 70px;
+    height: 70px;
+  }
+  .tictactoe .game .fa {
+    font-size: 56px;
+  }
+  .peer-details {
+    position: relative !important;
+    top: 0 !important;
+    right: 0 !important;
+    margin: 0 auto;
+    margin-left: 58px;
+    width: 180px !important;
+  }
 }

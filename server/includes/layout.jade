@@ -3,6 +3,7 @@ doctype html
 html(ng-app='app' ng-controller='themeController')
 	head
 		title J Games
+		meta(name='viewport', content='width=device-width, initial-scale=1')
 		link(href="/flavicon.ico", rel="shortcur icon", type="image/x-icon")
 		link(rel="stylesheet", href="/css/bootstrap-cyborg.css")
 		link(rel="stylesheet", ng-href="/css/{{currentTheme.url}}")

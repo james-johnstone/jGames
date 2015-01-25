@@ -29,4 +29,5 @@ angular.module('app').controller('themeController', function($scope){
     $scope.changeTheme = function(theme){
       $scope.currentTheme = theme;
     }
+
 });

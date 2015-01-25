@@ -1,10 +1,9 @@
-﻿angular.module('app').controller('pongController', function ($scope, $timeout, appNotifier) {
-
+angular.module('app').controller('pongController', function ($scope, $timeout, appNotifier) {
     var canvas = document.getElementById('pong-canvas');
     var context = canvas.getContext('2d');
 
-    canvas.height = document.getElementById('pong').offsetHeight - 84;
     canvas.width = document.getElementById('pong').offsetWidth - 40;
+	canvas.height = Math.min(window.innerHeight - 160, canvas.width / 1.6);
 
     var keys = [];
     var paddles, ball, playerPaddle, aiPaddle;
@@ -14,16 +13,17 @@
     $scope.controlOptions = true
     $scope.keyControls = false;
     var PLAYER_SPEED = 15;
-    var PADDLE_HEIGHT = 150;
+    var PADDLE_HEIGHT = canvas.height / 2.5;
     var PADDLE_WIDTH = 5;
     var VELOCITY = 6;
     var DELTA = 8;
     var RADIUS = 12;
     var playCount = 0;
-    var aiSpeed = 8;
+    var aiSpeed = 7;
     var GAME_OVER_SCORE = 5;
     var DOWN_KEY = 40;
     var UP_KEY = 38;
+	var fillStyle = 'white';
 
     $scope.resetState = function () {
         $scope.gameOver = false;
@@ -54,8 +54,10 @@
     }
 
     function setCanvasSize(height, width) {
+		height = Math.min(height, width/1.6);
         canvas.width = width;
         canvas.height = height;
+		PADDLE_HEIGHT = height / 2.5
     }
 
     // mouse controls
@@ -155,27 +157,30 @@
     }
 
     function draw() {
-        canvas.height = document.getElementById('pong').offsetHeight - 84;
-        canvas.width = document.getElementById('pong').offsetWidth - 40;
+		 setCanvasSize(window.innerHeight - 160, document.getElementById('pong').offsetWidth - 40)
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         drawBall();
+
+		var playerPaddle = paddles[0];
+		if (playerPaddle.x != canvas.width - 12)
+			playerPaddle.x = canvas.width - 12;
+
         for (var i = 0; i < paddles.length; i++) {
             paddle = paddles[i];
-            context.fillStyle = "white";
             //reset bounds if off canvas;
             if (paddle.y < 0)
               paddle.y = 0;
             if ((paddle.y + paddle.height) > canvas.height)
               paddle.y = (canvas.height - paddle.height);
-
+			context.fillStyle = fillStyle;
             context.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
         }
     }
 
     function drawBall() {
         context.beginPath();
-        context.fillStyle = "white";
+		context.fillStyle = fillStyle;
         context.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI, false);
         context.closePath();
         context.fill();
@@ -199,6 +204,11 @@
         $scope.resetState();
         newBall();
         animate();
+
+		if ($scope.GetRGB() > 600)
+			fillStyle = "black";
+		else
+			fillStyle = "white";
     }
 
     function getRandomDirection() {
@@ -240,6 +250,10 @@
     window.addEventListener("keyup", function (e) {
         keys[e.keyCode] = false;
     });
+
+	$scope.GetRGB = function(){
+		return $('.well').css('background-color').match(/\d+/g).reduce(function(a,b){ return parseInt(a) + parseInt(b);});
+	}
 
 })
 

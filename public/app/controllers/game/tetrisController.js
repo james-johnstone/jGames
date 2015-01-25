@@ -5,10 +5,17 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
     var secondaryCanvas = document.getElementById('tetris-next-shape');
     var secondaryContext = secondaryCanvas.getContext('2d');
+	canvas.height = window.innerHeight - 160;
+
+	// height must be even number to make collission detection easier.
+	if (canvas.height % 2 !== 0)
+		canvas.height--;
+
+	var shapeSize = Math.round(canvas.height / 22, 0);
+	canvas.width = shapeSize * 10;
 
     $scope.playerScore = 0;
-    var gameBoard, gameLevel, linesCleared, blockInterval, speed, currentBlock, nextBlock;
-    var shapeSize = 20;
+    var gameBoard, gameLevel, linesCleared, blockInterval, speed, currentBlock, nextBlock , skipCount;
     var activeBlocks = [];
     var LEFT_KEY = 37;
     var UP_KEY = 38;
@@ -121,7 +128,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
     function ReverseL() {
         this.coords = [
-            [0.5, -0.5],            
+            [0.5, -0.5],
             [0.5, 0.5],
             [0.5, -1.5],
             [-0.5, 0.5]
@@ -222,7 +229,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 
 
     function checkForCompleteLine() {
-        var maxLines = canvas.height / shapeSize;
+        var maxLines = Math.round(canvas.height / shapeSize,0);
         var lines = Array.apply(null, new Array(maxLines)).map(Number.prototype.valueOf, 0);
 
         for (var i = 0; i < activeBlocks.length; i++) {
@@ -243,7 +250,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
                 linesCleared++;
             }
         }
-        
+
         for (var i = 0,comboCount = 0; i < lines.length; i++) {
             if (lines[i] >= canvas.width / shapeSize) {
                 $scope.$apply(function () {
@@ -276,7 +283,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
             }
         }
         // remove empty blocks
-        activeBlocks.multisplice(emptyIndicies);        
+        activeBlocks.multisplice(emptyIndicies);
     }
 
     function moveBlocksDown(index, comboCount) {
@@ -306,6 +313,11 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
     }
 
     function updateCurrentBlock() {
+		if (skipCount > 1){
+			skipCount--;
+			return;
+		}
+
         var attemptedMove = angular.copy(currentBlock);
         attemptedMove.position.y += speed;
 
@@ -316,6 +328,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
             currentBlock.position.y += speed;
 
         checkCollissions();
+		skipCount = gameLevel;
     }
 
     function checkCollissions() {
@@ -442,7 +455,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
     }
 
     function initGame() {
-        gameLevel = 1;
+        gameLevel = skipCount = 1;
         linesCleared = 0;
         blockInterval = 20;
         speed = 2;
