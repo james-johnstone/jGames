@@ -271,6 +271,12 @@ select {
     right: 24px;
   }
 }
+@media (max-width: 768px) {
+  .jumbotron {
+    float: none;
+    width: initial;
+  }
+}
 @media (max-width: 700px) {
   .tictactoe .peer-details {
     right: 16px;

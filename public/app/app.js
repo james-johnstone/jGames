@@ -18,6 +18,8 @@ angular.module('app').config(function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
     $routeProvider
         .when('/', { templateUrl: '/partials/home/main', controller: 'mainController'})
+        .when('/experiments/sonar', {templateUrl:'/partials/experiments/sonar' , controller: 'transformController'})
+        .when('/experiments/transitions', {templateUrl:'/partials/experiments/transitions' , controller: 'transformController'})
         .when('/play', {templateUrl: 'partials/game/play', controller: 'gameController'})
         .when('/play/tictactoe', {templateUrl: '/partials/game/tictactoe', controller: 'tictactoeController'})
         .when('/play/pong', {templateUrl: '/partials/game/pong', controller: 'pongController'})

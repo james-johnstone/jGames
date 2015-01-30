@@ -24,9 +24,19 @@ angular.module('app').controller('themeController', function($scope){
       url:'bootstrap-chieko.css'
     }];
 
-    $scope.currentTheme = $scope.themes[0];
+    var previousTheme = docCookies.getItem("theme");
+
+    if (!!previousTheme){
+       var previousTheme = $scope.themes.filter(function(el){ return el.name == previousTheme;});;
+         if (!!previousTheme[0])
+           $scope.currentTheme = previousTheme[0];
+    }
+    else
+      $scope.currentTheme = $scope.themes[0];
 
     $scope.changeTheme = function(theme){
+      docCookies.setItem('theme', theme.name);
+
       $scope.currentTheme = theme;
     }
 

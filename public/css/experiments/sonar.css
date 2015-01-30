@@ -1,0 +1,139 @@
+.record {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px 50px 50px 50px;
+    margin: 40px auto;
+    background-color: red;
+    -webkit-transition: -webkit-transform 1s;
+    -moz-transition: -webkit-transform 1s;
+    -o-transition: -webkit-transform 1s;
+    transition: -webkit-transform 1s;
+}
+.record:after {
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    content: '';
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    -webkit-transform: scale(0.9);
+    -moz-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    -o-transform: scale(0.9);
+    transform: scale(0.9);
+}
+.record:hover {
+    background: #FF3700;
+    -webkit-transform: scale(0.93);
+    -moz-transform: scale(0.93);
+    -ms-transform: scale(0.93);
+    -webkit-animation: record-stop 1s ease forwards;
+    -moz-animation: record-stop 1s ease forwards;
+    -o-animation: record-stop 1s ease forwards;
+    animation: record-stop 1s ease forwards;
+    -webkit-transform: rotate(180deg);
+    -o-transform: scale(0.93);
+    transform: scale(0.93);
+}
+.record:hover:after {
+    -webkit-animation: sonarEffect 1.3s ease-out 75ms infinite;
+    -moz-animation: sonarEffect 1.3s ease-out 75ms;
+    -o-animation: sonarEffect 1.3s ease-out 75ms;
+    animation: sonarEffect 1.3s ease-out 75ms;
+}
+.record:hover .pause {
+    -webkit-animation: record-pause 1s ease forwards;
+    -moz-animation: record-pause 1s ease forwards;
+    -o-animation: record-pause 1s ease forwards;
+    animation: record-pause 1s ease forwards;
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.record:hover .pause:after {
+    -webkit-animation: record-pause 1s ease forwards;
+    -moz-animation: record-pause 1s ease forwards;
+    -o-animation: record-pause 1s ease forwards;
+    animation: record-pause 1s ease forwards;
+}
+@-webkit-keyframes sonarEffect {
+    0% {
+        opacity: 0.3;
+    }
+    40% {
+        opacity: 0.5;
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #3851bc, 0 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #3851bc, 0 0 0 10px rgba(255, 255, 255, 0.5);
+        -webkit-transform: scale(1.5);
+        -moz-transform: scale(1.5);
+        -ms-transform: scale(1.5);
+        -o-transform: scale(1.5);
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+@-moz-keyframes sonarEffect {
+    0% {
+        opacity: 0.3;
+    }
+    40% {
+        opacity: 0.5;
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #3851bc, 0 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #3851bc, 0 0 0 10px rgba(255, 255, 255, 0.5);
+        -moz-transform: scale(1.5);
+        -ms-transform: scale(1.5);
+        -o-transform: scale(1.5);
+        -webkit-transform: scale(1.5);
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+@keyframes sonarEffect {
+    0% {
+        opacity: 0.3;
+    }
+    40% {
+        opacity: 0.5;
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #3851bc, 0 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 0 10px 10px #3851bc, 0 0 0 10px rgba(255, 255, 255, 0.5);
+        -moz-transform: scale(1.5);
+        -ms-transform: scale(1.5);
+        -o-transform: scale(1.5);
+        -webkit-transform: scale(1.5);
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+@-webkit-keyframes record-stop {
+    from {
+        border-radius: 50px 50px 50px 50px;
+    }
+    to {
+        border-radius: 10px 10px 10px 10px;
+    }
+}
+@-webkit-keyframes record-pause {
+    from {
+        border-left: 0 solid #ABE2A7;
+        border-top: 0 solid transparent;
+        border-bottom: 0 solid transparent;
+    }
+    to {
+        border-left: 30px solid #ABE2A7;
+        border-top: 60px solid #ABE2A7;
+        border-bottom: 40px solid #ABE2A7;
+    }
+}

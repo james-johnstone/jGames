@@ -12,6 +12,10 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
 		canvas.height--;
 
 	var shapeSize = Math.round(canvas.height / 22, 0);
+  
+  if (shapeSize % 2 !== 0)
+    shapeSize--;
+
 	canvas.width = shapeSize * 10;
 
     $scope.playerScore = 0;
