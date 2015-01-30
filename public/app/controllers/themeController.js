@@ -1,6 +1,10 @@
 angular.module('app').controller('themeController', function($scope){
     $scope.themes = [{
-      name:'standard',
+      name:'ubuntu',
+      url:'bootstrap-ubuntu.css'
+    },
+    {
+      name:'cyborg',
       url:'bootstrap-cyborg.css'
     },
     {
@@ -10,10 +14,6 @@ angular.module('app').controller('themeController', function($scope){
     {
       name:'slate',
       url:'bootstrap-slate.css'
-    },
-    {
-      name:'ubuntu',
-      url:'bootstrap-ubuntu.css'
     },
     {
       name:'yeti',
