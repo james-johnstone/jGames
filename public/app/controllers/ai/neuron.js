@@ -75,25 +75,14 @@ function NeuralNetwork(options){
 // expects an array, representing the input vector
 NeuralNetwork.prototype.run = function(inputs){
   this.activationOutputs = [];
-  //var outputs = [];
-
   this.activationOutputs.push(new Array());
-  //outputs.push(new Array());
-
-  for (var i = 0; i < inputs.length; i++) {
-    //this.activationOutputs[0].push(this.inputLayer[i].getOutput(inputs));
-    //outputs[0].push(this.inputLayer[i].getOutput(inputs));
-  }
-
   this.activationOutputs[0] = inputs;
 
   for (var i = 0; i < this.hiddenLayers.length; i++) {
     this.activationOutputs.push(new Array());
-    //outputs.push(new Array());
 
     for (var j = 0; j < this.hiddenLayers[i].length; j++) {
         this.activationOutputs[i+1].push(this.hiddenLayers[i][j].getOutput(this.activationOutputs[i]));
-        //outputs[i+1].push(this.hiddenLayers[i][j].getOutput(outputs[i]))
     }
   }
 
@@ -103,7 +92,6 @@ NeuralNetwork.prototype.run = function(inputs){
     finalOutput.push(this.outputs[i].getOutput(this.activationOutputs[this.activationOutputs.length-1]));
   }
 
-  //console.log(finalOutput);
   this.activationOutputs.push(finalOutput);
 
   return finalOutput;
@@ -134,7 +122,7 @@ NeuralNetwork.prototype.train = function(data){
   if (!data.hasOwnProperty("length"))
     throw new Error("train function must provide an array of training data");
 
-  var errorThreshold = 0.05;
+  var errorThreshold = 0.005;
   var iterations = 20000;
   var learningRate = 0.3;
 
@@ -152,8 +140,6 @@ NeuralNetwork.prototype.train = function(data){
   }
 
   console.log('done');
-  console.log('interations: ' + iterations);
-  console.log('error: ' + error);
 }
 
 NeuralNetwork.prototype.trainPattern = function(input, target, learningRate){
@@ -161,8 +147,8 @@ NeuralNetwork.prototype.trainPattern = function(input, target, learningRate){
   var errors = [];
   var netError = 0;
 
-  for (var i = 0; i < this.outputs.length; i++) {
-     var delta  = (target[i] || 0) - networkOutput[i];
+  for (var i = 0; i < target.length; i++) {
+     var delta  = target[i] - networkOutput[i];
      netError+= (delta * delta)/2;
      errors.push(delta);
   }
