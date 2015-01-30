@@ -39,14 +39,14 @@
     margin-left: 0;
 }
 
-.transform, .play:hover {
+.transform {
     -webkit-animation: play-pause 1s ease forwards;
     -moz-animation: play-pause 1s ease forwards;
     -o-animation: play-pause 1s ease forwards;
     animation: play-pause 1s ease forwards;
 }
 
-.transform:after, .play:hover:after {
+.transform:after {
     -webkit-animation: after-play-pause 1s ease forwards;
     -moz-animation: after-play-pause 1s ease forwards;
     -o-animation: after-play-pause 1s ease forwards;

@@ -1,4 +1,4 @@
 .container.transition
   .well.absolute-center.text-center
     .play.animated(ng-class="{'transform' : isTransform }")
-    .btn.btn-default(ng-click="toggleTransform()") transform
+    .btn.btn-default(ng-click="toggleTransform()", ng-disabled="isTransform") transform
