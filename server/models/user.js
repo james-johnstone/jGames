@@ -47,7 +47,7 @@ function createDefaultUsers() {
         if (collection.length === 0) {
             var salt, hash;
             salt = crypto.createSalt();
-            hash = crypto.hashPassword('1006Mo^Ch^ko', salt);
+            hash = crypto.hashPassword('', salt);
 
             User.create({ local: { email: 'jcjohnstone8@gmail.com', firstName: 'Jamie', lastName: 'Johnstone', userName: 'Jamie', salt: salt, hashedPassword: hash, roles: ["admin"] } });
         }

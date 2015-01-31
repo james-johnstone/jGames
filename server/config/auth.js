@@ -48,19 +48,19 @@ exports.requiresRole = function (role) {
 exports.config = {
     'facebookAuth': {
         'clientID': '866991250010081',
-        'clientSecret': 'd3537b1b7af99f2e61d6b545414ef793',
+        'clientSecret': '',
         'callbackURL': 'http://james-johnstone.me/auth/facebook/callback'
     },
 
     'twitterAuth': {
         'consumerKey': 'GsS4f70F0BOgQqQ4BY7SBqLL8',
-        'consumerSecret': 'TNyUdHG2fAZudSjW8A3lMeTJHsqPLAG7DK8nomMgMH0Ns7lvBd',
+        'consumerSecret': '',
         'callbackURL': 'http://james-johnstone.me/auth/twitter/callback'
     },
 
     'googleAuth': {
         'clientID': '718084310608-muvrq0p1kdh8rooit7ueik4jg31qm88b.apps.googleusercontent.com',
-        'clientSecret': 'NB5roYFTqJ4rcQl684S_LgJn',
+        'clientSecret': '',
         'callbackURL': 'http://james-johnstone.me/auth/google/callback'
     }
 };
