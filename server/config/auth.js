@@ -1,4 +1,4 @@
-﻿var passport = require('passport');
+var passport = require('passport');
 
 exports.authenticate = function (req, res, next) {
 
@@ -49,18 +49,18 @@ exports.config = {
     'facebookAuth': {
         'clientID': '737076736328331',
         'clientSecret': '444d9050d4027681182a656e1501b403',
-        'callbackURL': 'http://localhost:3000/auth/facebook/callback'
+        'callbackURL': 'http://james-johnstone.me/auth/facebook/callback'
     },
 
     'twitterAuth': {
         'consumerKey': 'GsS4f70F0BOgQqQ4BY7SBqLL8',
         'consumerSecret': 'TNyUdHG2fAZudSjW8A3lMeTJHsqPLAG7DK8nomMgMH0Ns7lvBd',
-        'callbackURL': 'http://localhost:3000/auth/twitter/callback'
+        'callbackURL': 'http://james-johnstone.me/auth/twitter/callback'
     },
 
     'googleAuth': {
-        'clientID': '346724692474-6aq60ko3u09ree7pbid30or1bntmg57u.apps.googleusercontent.com',
-        'clientSecret': 'Pz2z4Ido1UEmEb4FMngZw75y',
-        'callbackURL': 'http://localhost:3000/auth/google/callback'
+        'clientID': '718084310608-muvrq0p1kdh8rooit7ueik4jg31qm88b.apps.googleusercontent.com',
+        'clientSecret': 'NB5roYFTqJ4rcQl684S_LgJn',
+        'callbackURL': 'http://james-johnstone.me/auth/google/callback'
     }
 };
