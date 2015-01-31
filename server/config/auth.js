@@ -47,8 +47,8 @@ exports.requiresRole = function (role) {
 
 exports.config = {
     'facebookAuth': {
-        'clientID': '737076736328331',
-        'clientSecret': '444d9050d4027681182a656e1501b403',
+        'clientID': '866991250010081',
+        'clientSecret': 'd3537b1b7af99f2e61d6b545414ef793',
         'callbackURL': 'http://james-johnstone.me/auth/facebook/callback'
     },
 
