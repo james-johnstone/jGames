@@ -1,4 +1,4 @@
-﻿var mongoose = require('mongoose'),
+var mongoose = require('mongoose'),
     crypto = require('../utilities/crypto');
 
 var userSchema = mongoose.Schema({
@@ -47,10 +47,9 @@ function createDefaultUsers() {
         if (collection.length === 0) {
             var salt, hash;
             salt = crypto.createSalt();
-            hash = crypto.hashPassword('test', salt);
+            hash = crypto.hashPassword('', salt);
 
-            User.create({ local: { email: 'admin@uat.co', firstName: 'Jamie', lastName: 'Johnstone', userName: 'Jamie', salt: salt, hashedPassword: hash, roles: ["admin"] } });
-            User.create({local:{ email: 'user@uat.co', firstName: 'Dr', lastName: 'Doom', userName: 'Doc', salt: salt, hashedPassword: hash, }});
+            User.create({ local: { email: 'jcjohnstone8@gmail.com', firstName: 'Jamie', lastName: 'Johnstone', userName: 'Jamie', salt: salt, hashedPassword: hash, roles: ["admin"] } });
         }
     });
 }
