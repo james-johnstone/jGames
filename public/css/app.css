@@ -263,10 +263,12 @@ select {
 @media (max-width: 992px) {
   .tictactoe .peer-details {
     width: 180px;
-    top: 60px;
   }
-  .tictactoe .peer-details input {
+  input {
     max-width: 150px !important;
+  }
+  .basic-transform input[type="number"] {
+    max-width: 60px !important;
   }
 }
 @media (max-width: 880px) {

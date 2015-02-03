@@ -21,6 +21,7 @@ angular.module('app').config(function ($routeProvider, $locationProvider) {
         .when('/experiments/sonar', {templateUrl:'/partials/experiments/sonar' , controller: 'transformController'})
         .when('/experiments/transitions', {templateUrl:'/partials/experiments/transitions' , controller: 'transformController'})
         .when('/experiments/canvas-transform', {templateUrl:'/partials/experiments/canvas-transform' , controller: 'canvasController'})
+        .when('/experiments/basic-transform', {templateUrl:'/partials/experiments/basic-transform' , controller: 'basicTransformController'})
         .when('/play', {templateUrl: 'partials/game/play', controller: 'gameController'})
         .when('/play/tictactoe', {templateUrl: '/partials/game/tictactoe', controller: 'tictactoeController'})
         .when('/play/pong', {templateUrl: '/partials/game/pong', controller: 'pongController'})
