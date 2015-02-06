@@ -1,4 +1,4 @@
-angular.module('app').controller('canvasController', function($scope){
+angular.module('app').controller('canvasController', function($scope, $routeParams, $location){
 
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
@@ -18,6 +18,46 @@ angular.module('app').controller('canvasController', function($scope){
     $scope.isMinorTransform = false;
     $scope.currentMajorTransform = -1;
     $scope.currentMinorTransform = -1;
+    $scope.shareUrl;
+
+    $scope.loadParams = function(){
+        var major = [$routeParams.mr0,$routeParams.mr1,$routeParams.mr2,$routeParams.mr3];
+        var minor = [$routeParams.mn0,$routeParams.mn1,$routeParams.mn2,$routeParams.mn3];
+
+        if ($scope.isAnyNull(major) || $scope.isAnyNull(minor))
+          return;
+
+        $scope.majorTransform = major;
+        $scope.minorTransform = minor;
+
+        if ($routeParams.ist){
+          $scope.isMajorTransform = true;
+          $scope.currentMajorTransform = 0;
+        }
+        if ($routeParams.ism){
+          $scope.isMinorTransform = true;
+          $scope.currentMinorTransform = 0;
+        }
+    }
+
+    $scope.updateShare = function(){
+      var minor = angular.copy($scope.minorTransform);
+      var major = angular.copy($scope.majorTransform);
+
+      $scope.shareUrl = location.href + "?ist=" + $scope.isMajorTransform + "&ism=" + $scope.isMinorTransform
+                          + $scope.getParams(major, false) + $scope.getParams(minor,true);
+    }
+
+    $scope.getParams = function(transform, isMinor){
+        return transform.map(function(el,i){
+          return ( isMinor ? "&mn" : "&mr" ) + i +"=" + el }).reduce(function(a,b){
+            return a + b;
+          });
+    }
+
+    $scope.isAnyNull = function(array){
+      return array.filter(function(el){return !el;}).length > 0;
+    }
 
     $scope.drawBackground = function(){
         ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -127,6 +167,9 @@ angular.module('app').controller('canvasController', function($scope){
         if ($scope.isMinorTransform || $scope.isMajorTransform)
           $scope.updateState();
     }
+
+    if (!!$routeParams.mn0)
+      $scope.loadParams();
 
     $scope.animate();
 })
