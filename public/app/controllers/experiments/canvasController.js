@@ -5,14 +5,19 @@ angular.module('app').controller('canvasController', function($scope){
 
     canvas.height = window.innerHeight - 160;
     canvas.width = window.innerWidth /1.6;
-
-		var sin = Math.sin(Math.PI/20);
-		var cos = Math.cos(Math.PI/20);
+    $scope.radianAnge = Math.PI/20;
+		var sin = Math.sin($scope.radianAnge);
+		var cos = Math.cos($scope.radianAnge);
 
     $scope.x;
     $scope.y;
     $scope.majorTransform = [1.12,1.12,1.12,1.12];
     $scope.minorTransform = [1,1,1,1];
+
+    $scope.isMajorTransform = false;
+    $scope.isMinorTransform = false;
+    $scope.currentMajorTransform = -1;
+    $scope.currentMinorTransform = -1;
 
     $scope.drawBackground = function(){
         ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -50,10 +55,78 @@ angular.module('app').controller('canvasController', function($scope){
 				}
     }
 
-    function animate() {
-        requestAnimFrame(animate);
-        $scope.drawBackground();
+    $scope.updateState = function(){
+
+        $scope.$apply(function () {
+          if ($scope.isMinorTransform){
+              $scope.minorTransform[$scope.currentMinorTransform] += 0.01;
+
+              if ($scope.minorTransform[$scope.currentMinorTransform] > 2.5 || $scope.currentMinorTransform > 3)
+                $scope.switchMinorTransform();
+            }
+
+          if ($scope.isMajorTransform){
+              $scope.majorTransform[$scope.currentMajorTransform] += 0.01;
+
+              if ($scope.majorTransform[$scope.currentMajorTransform] > 2.5 || $scope.currentMajorTransform > 3)
+                $scope.switchMajorTransform();
+            }
+        });
     }
 
-    animate();
+    $scope.switchMajorTransform = function(){
+      $scope.majorTransform = [1.12,1.12,1.12,1.12];
+
+      if ($scope.currentMajorTransform > 3)
+        $scope.currentMajorTransform = 0;
+      else
+        $scope.currentMajorTransform ++;
+
+      $scope.majorTransform[$scope.currentMajorTransform] = 0.1;
+    }
+
+    $scope.switchMinorTransform = function(){
+      $scope.minorTransform = [1,1,1,1]
+
+      if ($scope.currentMinorTransform > 3)
+        $scope.currentMinorTransform = 0;
+      else
+        $scope.currentMinorTransform ++;
+
+      $scope.minorTransform[$scope.currentMinorTransform] = 0.1;
+    }
+
+    $scope.toggleMajorTransform = function(){
+      $scope.majorTransform = [1.12,1.12,1.12,1.12];
+      $scope.isMajorTransform = !$scope.isMajorTransform;
+      $scope.currentMajorTransform = -1;
+
+      if ($scope.isMajorTransform)
+        $scope.switchMajorTransform();
+    }
+
+    $scope.toggleMinorTransform = function(){
+      $scope.minorTransform = [1,1,1,1];
+      $scope.isMinorTransform = !$scope.isMinorTransform;
+      $scope.currentMinorTransform = -1;
+
+      if ($scope.isMinorTransform)
+        $scope.switchMinorTransform();
+    }
+
+    $scope.pause = function(isMinor){
+      if (!isMinor)
+        $scope.isMajorTransform = false;
+      if (!!isMinor)
+        $scope.isMinorTransform = false;
+    }
+
+    $scope.animate = function() {
+        requestAnimFrame($scope.animate);
+        $scope.drawBackground();
+        if ($scope.isMinorTransform || $scope.isMajorTransform)
+          $scope.updateState();
+    }
+
+    $scope.animate();
 })
