@@ -64,6 +64,16 @@ select {
   bottom: 0;
   right: 0;
 }
+.container.webgl {
+  width: 92%;
+}
+.container.webgl .well {
+  padding: 12px;
+}
+.container.webgl .scene {
+  float: left;
+  padding-right: 24px;
+}
 .pong,
 .tetris {
   text-align: center;
