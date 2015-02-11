@@ -9,7 +9,7 @@ angular.module('app').controller('webglController', function($scope){
     $scope.NEAR = 0.1,
     $scope.FAR = 10000;
     $scope.shapes = [];
-
+    $scope.activeShape;
 
     // make the default material and light
     $scope.material = new THREE.MeshLambertMaterial(
@@ -68,7 +68,11 @@ angular.module('app').controller('webglController', function($scope){
         $scope.renderer.render($scope.scene, $scope.camera);
     }
 
-    $scope.scene.add($scope.newSphere());
+    $scope.addSphere = function(){
+      $scope.scene.add($scope.newSphere());
+    }
+
+    $scope.addSphere();
 
     $scope.animate();
 });

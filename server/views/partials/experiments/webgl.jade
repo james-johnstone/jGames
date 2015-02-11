@@ -2,16 +2,18 @@
   .well
     div.scene#container
     .controls
-      .shape-control(data-ng-repeat="shape in shapes track by $index")
-        b Scale
-        input(type="range", step=0.1, name="x", min="0", max="5", ng-model="shape.scale.x")
-        input(type="range", step=0.1, name="y", min="0", max="5", ng-model="shape.scale.y")
-        input(type="range", step=0.1, name="z", min="0", max="5", ng-model="shape.scale.z")
-        b Position
-        input(type="range", step=5, name="x", min="-250", max="250", ng-model="shape.position.x")
-        input(type="range", step=5, name="y", min="-250", max="250", ng-model="shape.position.y")
-        input(type="range", step=5, name="z", min="-250", max="250", ng-model="shape.position.z")
-        b Rotation
-        input(type="range", step=0.1, name="x", min="0", max="5", ng-model="shape.rotation.x")
-        input(type="range", step=0.1, name="y", min="0", max="5", ng-model="shape.rotation.y")
-        input(type="range", step=0.1, name="z", min="0", max="5", ng-model="shape.rotation.z")
+      div
+        select.form-control.inline(ng-model="activeShape", ng-options="shape.geometry.type + ' - ' + index for (index,shape) in shapes")
+        .btn.btn-default(ng-click="addSphere()") Add Sphere
+      b Scale
+      input(type="range", step=0.1, name="x", min="0", max="5", ng-model="activeShape.scale.x")
+      input(type="range", step=0.1, name="y", min="0", max="5", ng-model="activeShape.scale.y")
+      input(type="range", step=0.1, name="z", min="0", max="5", ng-model="activeShape.scale.z")
+      b Position
+      input(type="range", step=5, name="x", min="-250", max="250", ng-model="activeShape.position.x")
+      input(type="range", step=5, name="y", min="-250", max="250", ng-model="activeShape.position.y")
+      input(type="range", step=5, name="z", min="-250", max="250", ng-model="activeShape.position.z")
+      b Rotation
+      input(type="range", step=0.1, name="x", min="0", max="5", ng-model="activeShape.rotation.x")
+      input(type="range", step=0.1, name="y", min="0", max="5", ng-model="activeShape.rotation.y")
+      input(type="range", step=0.1, name="z", min="0", max="5", ng-model="activeShape.rotation.z")
