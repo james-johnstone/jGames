@@ -17,8 +17,16 @@ angular.module('app').controller('webglController', function($scope){
             color: 0xCC0000
           });
 
-    $scope.light = new THREE.PointLight(0xffffff);
+    //$scope.light = new THREE.PointLight(0xffffff);
+    //$scope.light.position.x = 10;
+    //$scope.light.position.y = 50;
+    //$scope.light.position.z = 130;+
 
+    //add some directional light
+    $scope.light = new THREE.DirectionalLight( 0xffffff, 1 );
+    $scope.light.position.set(0, 0, 1);
+
+    //$scope.light = new THREE.AmbientLight(0xfffff);
     //set the scene
 
     $scope.renderer = new THREE.WebGLRenderer();
@@ -35,31 +43,35 @@ angular.module('app').controller('webglController', function($scope){
     // set defaults
     $scope.camera.position.z = 300;
 
-    $scope.light.position.x = 10;
-    $scope.light.position.y = 50;
-    $scope.light.position.z = 130;
-
     $scope.renderer.setSize($scope.width, $scope.height);
     // attach renderer
     container.appendChild($scope.renderer.domElement);
 
     $scope.newSphere = function(){
-      var sphere = new THREE.Mesh(
+      return $scope.newShape(new THREE.SphereGeometry(60,20,20));
+    }
 
-      new THREE.SphereGeometry(
-        50,
-        20,
-        20),
-      $scope.material);
+    $scope.newBox  = function(){
+      return $scope.newShape( new THREE.BoxGeometry(20,20,20,4,4,4));
+    }
 
-      sphere.geometry.dynamic = true;
+    $scope.newShape = function(geometry){
+      var shape = new THREE.Mesh(
+      geometry,
+      new THREE.MeshLambertMaterial(
+            {
+              color: 0xCC0000,
+              wireframe : true
+            }));
+      shape.geometry.dynamic = true;
       // changes to the vertices
-      sphere.geometry.verticesNeedUpdate = true;
+      shape.geometry.verticesNeedUpdate = true;
       // changes to the normals
-      sphere.geometry.normalsNeedUpdate = true;
+      shape.geometry.normalsNeedUpdate = true;
 
-      $scope.shapes.push(sphere);
-      return sphere;
+      $scope.shapes.push(shape);
+      $scope.activeShape = shape;
+      return shape;
     }
 
 
@@ -72,7 +84,19 @@ angular.module('app').controller('webglController', function($scope){
       $scope.scene.add($scope.newSphere());
     }
 
+    $scope.addBox = function(){
+      $scope.scene.add($scope.newBox());
+    }
+
+    $scope.rotate = function(x,y){
+      $scope.camera.position.x += Math.cos(1) * x;
+      $scope.camera.position.y += Math.sin(1) * y;
+
+      $scope.camera.lookAt($scope.scene.position);
+    }
+
     $scope.addSphere();
+    $scope.activeShape = $scope.shapes[0];
 
     $scope.animate();
 });

@@ -4,7 +4,9 @@
     .controls
       div
         select.form-control.inline(ng-model="activeShape", ng-options="shape.geometry.type + ' - ' + index for (index,shape) in shapes")
+      div
         .btn.btn-default(ng-click="addSphere()") Add Sphere
+        .btn.btn-default(ng-click="addBox()") Add Box
       b Scale
       input(type="range", step=0.1, name="x", min="0", max="5", ng-model="activeShape.scale.x")
       input(type="range", step=0.1, name="y", min="0", max="5", ng-model="activeShape.scale.y")
@@ -17,3 +19,10 @@
       input(type="range", step=0.1, name="x", min="0", max="5", ng-model="activeShape.rotation.x")
       input(type="range", step=0.1, name="y", min="0", max="5", ng-model="activeShape.rotation.y")
       input(type="range", step=0.1, name="z", min="0", max="5", ng-model="activeShape.rotation.z")
+      b Colour
+      input(type="range", step=0.1, name="x", min="0", max="1", ng-model="activeShape.material.color.r")
+      input(type="range", step=0.1, name="y", min="0", max="1", ng-model="activeShape.material.color.g")
+      input(type="range", step=0.1, name="z", min="0", max="1", ng-model="activeShape.material.color.b")
+      b Wireframe
+      .input
+        input(type="checkbox", name="wireframe", ng-model="activeShape.material.wireframe")
