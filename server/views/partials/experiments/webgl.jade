@@ -7,6 +7,8 @@
       div
         .btn.btn-default(ng-click="addSphere()") Add Sphere
         .btn.btn-default(ng-click="addBox()") Add Box
+        .btn.btn-sucsess.fa.fa-floppy-o(ng-click="saveState()")
+        .btn.btn-sucsess.fa.fa-refresh(ng-click="clearScene()")
       b Scale
       input(type="range", step=0.1, name="x", min="0", max="5", ng-model="activeShape.scale.x")
       input(type="range", step=0.1, name="y", min="0", max="5", ng-model="activeShape.scale.y")

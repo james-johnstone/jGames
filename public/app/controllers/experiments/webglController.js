@@ -1,4 +1,4 @@
-angular.module('app').controller('webglController', function($scope){
+angular.module('app').controller('webglController', function($scope,appNotifier){
 
   $scope.height = window.innerHeight - 160;
   $scope.width = window.innerWidth /1.6;
@@ -74,12 +74,6 @@ angular.module('app').controller('webglController', function($scope){
       return shape;
     }
 
-
-    $scope.animate = function() {
-        requestAnimFrame($scope.animate);
-        $scope.renderer.render($scope.scene, $scope.camera);
-    }
-
     $scope.addSphere = function(){
       $scope.scene.add($scope.newSphere());
     }
@@ -95,8 +89,72 @@ angular.module('app').controller('webglController', function($scope){
       $scope.camera.lookAt($scope.scene.position);
     }
 
-    $scope.addSphere();
-    $scope.activeShape = $scope.shapes[0];
+    $scope.getSerializableShape = function(shape){
+      var serialized = {};
+
+      serialized.position = shape.position;
+      serialized.scale = shape.scale;
+      serialized.rotation = shape.rotation;
+
+      serialized.colour = shape.material.color;
+      serialized.isWireframe = shape.material.wireframe
+      serialized.geometry = shape.geometry.type;
+      return serialized
+    }
+
+    $scope.getJson = function(){
+      var shapes = [];
+
+      for (var i =0; i < $scope.shapes.length; i++){
+        shapes.push($scope.getSerializableShape($scope.shapes[i]));
+      }
+      return angular.toJson(shapes);
+    }
+
+    $scope.saveState = function(){
+        docCookies.setItem('scene', $scope.getJson());
+        appNotifier.notify('State saved', true);
+    }
+
+    $scope.clearScene = function(){
+      for (var i= 0; i < $scope.shapes.length; i++){
+        $scope.scene.remove($scope.shapes[i]);
+      }
+      $scope.shapes = [];
+      appNotifier.notify('Cleared', true);
+    }
+
+    $scope.deserializeShape = function(shape){
+      var newShape = shape.geometry == "BoxGeometry" ? $scope.newBox() : $scope.newSphere();
+
+      //newShape.position.x = shape.position.x;
+
+      newShape.position.set(shape.position.x,shape.position.y,shape.position.z);
+      newShape.scale.set(shape.scale.x,shape.scale.y,shape.scale.z);
+      newShape.rotation.set(shape.rotation._x,shape.rotation._y,shape.rotation._z);
+      newShape.material.color.setRGB(shape.colour.r,shape.colour.g,shape.colour.b);
+
+      return newShape;
+    }
+
+    if (docCookies.hasItem('scene')){
+      var scene = docCookies.getItem('scene');
+      var shapes = angular.fromJson(scene);
+
+      for (var i=0; i <shapes.length; i++){
+        var shape = $scope.deserializeShape(shapes[i]);
+        $scope.scene.add(shape);
+      }
+    }
+    else {
+      $scope.addSphere();
+      $scope.activeShape = $scope.shapes[0];
+    }
+
+    $scope.animate = function() {
+        requestAnimFrame($scope.animate);
+        $scope.renderer.render($scope.scene, $scope.camera);
+    }
 
     $scope.animate();
 });
