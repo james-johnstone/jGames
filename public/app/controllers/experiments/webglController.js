@@ -10,6 +10,10 @@ angular.module('app').controller('webglController', function($scope,appNotifier)
     $scope.FAR = 10000;
     $scope.shapes = [];
     $scope.activeShape;
+    $scope.rotation = 0.5;
+
+    var mouse3D, isMouseDown = false, onMouseDownPosition,
+			radious = 800, theta = 45, onMouseDownTheta = 45, phi = 60, onMouseDownPhi = 60;
 
     // make the default material and light
     $scope.material = new THREE.MeshLambertMaterial(
@@ -17,17 +21,14 @@ angular.module('app').controller('webglController', function($scope,appNotifier)
             color: 0xCC0000
           });
 
-    //$scope.light = new THREE.PointLight(0xffffff);
-    //$scope.light.position.x = 10;
-    //$scope.light.position.y = 50;
-    //$scope.light.position.z = 130;+
-
     //add some directional light
     $scope.light = new THREE.DirectionalLight( 0xffffff, 1 );
     $scope.light.position.set(0, 0, 1);
 
-    //$scope.light = new THREE.AmbientLight(0xfffff);
-    //set the scene
+    $scope.light2 = new THREE.DirectionalLight( 0xffffff, 1 );
+    $scope.light2.position.set(0, 0, 1);
+
+    var ambientLight = new THREE.AmbientLight( 0xffffff );
 
     $scope.renderer = new THREE.WebGLRenderer();
     $scope.camera =  new THREE.PerspectiveCamera(
@@ -39,9 +40,14 @@ angular.module('app').controller('webglController', function($scope,appNotifier)
     $scope.scene = new THREE.Scene();
     $scope.scene.add($scope.camera);
     $scope.scene.add($scope.light);
+    $scope.scene.add( ambientLight );
+
+		onMouseDownPosition = new THREE.Vector2();
 
     // set defaults
-    $scope.camera.position.z = 300;
+		$scope.camera.position.x = radious * Math.sin( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 );
+		$scope.camera.position.y = radious * Math.sin( phi * Math.PI / 360 );
+		$scope.camera.position.z = radious * Math.cos( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 );
 
     $scope.renderer.setSize($scope.width, $scope.height);
     // attach renderer
@@ -56,13 +62,15 @@ angular.module('app').controller('webglController', function($scope,appNotifier)
     }
 
     $scope.newShape = function(geometry){
-      var shape = new THREE.Mesh(
-      geometry,
-      new THREE.MeshLambertMaterial(
-            {
-              color: 0xCC0000,
-              wireframe : true
-            }));
+      var colour = new THREE.Color();
+      colour.setHex('0xCC0000');
+
+      var shape = new THREE.Mesh(geometry,
+          new THREE.MeshLambertMaterial({wireframe : true}));
+
+      shape.material.color = colour;
+      shape.material.ambient = colour;
+
       shape.geometry.dynamic = true;
       // changes to the vertices
       shape.geometry.verticesNeedUpdate = true;
@@ -80,13 +88,6 @@ angular.module('app').controller('webglController', function($scope,appNotifier)
 
     $scope.addBox = function(){
       $scope.scene.add($scope.newBox());
-    }
-
-    $scope.rotate = function(x,y){
-      $scope.camera.position.x += Math.cos(1) * x;
-      $scope.camera.position.y += Math.sin(1) * y;
-
-      $scope.camera.lookAt($scope.scene.position);
     }
 
     $scope.getSerializableShape = function(shape){
@@ -127,8 +128,6 @@ angular.module('app').controller('webglController', function($scope,appNotifier)
     $scope.deserializeShape = function(shape){
       var newShape = shape.geometry == "BoxGeometry" ? $scope.newBox() : $scope.newSphere();
 
-      //newShape.position.x = shape.position.x;
-
       newShape.position.set(shape.position.x,shape.position.y,shape.position.z);
       newShape.scale.set(shape.scale.x,shape.scale.y,shape.scale.z);
       newShape.rotation.set(shape.rotation._x,shape.rotation._y,shape.rotation._z);
@@ -151,10 +150,57 @@ angular.module('app').controller('webglController', function($scope,appNotifier)
       $scope.activeShape = $scope.shapes[0];
     }
 
+    container.addEventListener( 'mousemove', onDocumentMouseMove, false );
+		container.addEventListener( 'mousedown', onDocumentMouseDown, false );
+		container.addEventListener( 'mouseup', onDocumentMouseUp, false );
+		container.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
+
     $scope.animate = function() {
         requestAnimFrame($scope.animate);
+        $scope.camera.lookAt($scope.scene.position);
         $scope.renderer.render($scope.scene, $scope.camera);
     }
 
     $scope.animate();
+
+    function onDocumentMouseWheel( event ) {
+				radious -= event.wheelDeltaY;
+
+				$scope.camera.position.x = radious * Math.sin( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 );
+				$scope.camera.position.y = radious * Math.sin( phi * Math.PI / 360 );
+				$scope.camera.position.z = radious * Math.cos( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 );
+				$scope.camera.updateMatrix();
+			}
+
+			function onDocumentMouseDown( event ) {
+				isMouseDown = true;
+
+				onMouseDownTheta = theta;
+				onMouseDownPhi = phi;
+				onMouseDownPosition.x = event.clientX;
+				onMouseDownPosition.y = event.clientY;
+			}
+
+      function onDocumentMouseUp( event ) {
+				isMouseDown = false;
+
+				onMouseDownPosition.x = event.clientX - onMouseDownPosition.x;
+				onMouseDownPosition.y = event.clientY - onMouseDownPosition.y;
+      }
+
+    	function onDocumentMouseMove( event ) {
+  			if ( isMouseDown ) {
+  				theta = - ( ( event.clientX - onMouseDownPosition.x ) * 0.5 ) + onMouseDownTheta;
+  				phi = ( ( event.clientY - onMouseDownPosition.y ) * 0.5 ) + onMouseDownPhi;
+
+  				phi = Math.min( 180, Math.max( 0, phi ) );
+
+  				$scope.camera.position.x = radious * Math.sin( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 );
+  				$scope.camera.position.y = radious * Math.sin( phi * Math.PI / 360 );
+  				$scope.camera.position.z = radious * Math.cos( theta * Math.PI / 360 ) * Math.cos( phi * Math.PI / 360 );
+  				$scope.camera.updateMatrix();
+
+  			}
+		}
+
 });
