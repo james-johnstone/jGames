@@ -23,6 +23,7 @@ angular.module('app').config(function ($routeProvider, $locationProvider) {
         .when('/experiments/canvas-transform', {templateUrl:'/partials/experiments/canvas-transform' , controller: 'canvasController'})
         .when('/experiments/basic-transform', {templateUrl:'/partials/experiments/basic-transform' , controller: 'basicTransformController'})
         .when('/experiments/webgl', {templateUrl:'/partials/experiments/webgl' , controller: 'webglController'})
+        .when('/experiments/canvas-plot', {templateUrl:'/partials/experiments/canvas-plot' , controller: 'canvasPlotController'})
         .when('/play', {templateUrl: 'partials/game/play', controller: 'gameController'})
         .when('/play/tictactoe', {templateUrl: '/partials/game/tictactoe', controller: 'tictactoeController'})
         .when('/play/pong', {templateUrl: '/partials/game/pong', controller: 'pongController'})
