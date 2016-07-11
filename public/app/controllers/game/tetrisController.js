@@ -243,7 +243,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
                 var coord = normalizedCoords[j];
                 if (!coord)
                     continue
-                var line = (canvas.height - coord[1] - shapeSize) / shapeSize;
+                var line = Math.floor((canvas.height - coord[1] - shapeSize) / shapeSize);
                 lines[line]++;
             }
         }
@@ -277,7 +277,7 @@ angular.module('app').controller('tetrisController', function ($scope, $timeout)
                 if (!coord)
                     continue;
 
-                var line = (canvas.height - coord[1] - shapeSize) / shapeSize;
+                var line = Math.floor((canvas.height - coord[1] - shapeSize) / shapeSize);
                 if (line === index) {
                     activeBlocks[i].coords[j] = null;
                 }
